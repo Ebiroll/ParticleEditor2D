@@ -23,14 +23,12 @@
 //#include "Application.h"
 #include "ParticleEditor.h"
 #include <QFile>
-#include "Context.h"
-#include "ProcessUtils.h"
 int Main()
 {
     int argc = 0;
     char** argv = 0;
-    Urho3D::SharedPtr<Urho3D::Context> context(new Urho3D::Context());
-    Urho3D::ParticleEditor editor(argc, argv, context);
+    //Urho3D::SharedPtr<Urho3D::Context> context(new Urho3D::Context());
+    Urho3D::ParticleEditor editor(argc, argv);
 
     QFile file(":/qdarkstyle/style.qss");
     if (file.open(QFile::ReadOnly | QFile::Text))
@@ -42,6 +40,6 @@ int Main()
 //URHO3D_DEFINE_MAIN(Main());
 int main(int argc, char** argv)
 {
-    Urho3D::ParseArguments(argc, argv);
+    //Urho3D::ParseArguments(argc, argv);
     return Main();
 }

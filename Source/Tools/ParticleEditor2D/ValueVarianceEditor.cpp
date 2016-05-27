@@ -40,23 +40,23 @@ ValueVarianceEditor::ValueVarianceEditor(const QString& text) :
     averageEditor_->label()->setFixedWidth(64);
     connect(averageEditor_, SIGNAL(valueChanged(float)), this, SLOT(editorValueChanged()));
 
-    varianceEditor_ = new FloatEditor(tr("Variance"), false);
-    vBoxLayout->addLayout(varianceEditor_);
+    spreadEditor_ = new FloatEditor(tr("Spread"), false);
+    vBoxLayout->addLayout(spreadEditor_);
 
-    varianceEditor_->label()->setFixedWidth(64);
-    connect(varianceEditor_, SIGNAL(valueChanged(float)), this, SLOT(editorValueChanged()));
+    spreadEditor_->label()->setFixedWidth(64);
+    connect(spreadEditor_, SIGNAL(valueChanged(float)), this, SLOT(editorValueChanged()));
 }
 
 ValueVarianceEditor::~ValueVarianceEditor()
 {
     delete averageEditor_;
-    delete varianceEditor_;
+    delete spreadEditor_;
 }
 
 void ValueVarianceEditor::setValue(float avarage, float variance)
 {
     averageEditor_->setValue(avarage);
-    varianceEditor_->setValue(variance);
+    spreadEditor_->setValue(variance);
 }
 
 
@@ -68,7 +68,7 @@ void ValueVarianceEditor::editorValueChanged()
 void ValueVarianceEditor::setRange(float min, float max)
 {
     averageEditor_->setRange(min, max);
-    varianceEditor_->setRange(0.0f, max - min);
+    spreadEditor_->setRange(0.0f, max - min);
 }
 
 float ValueVarianceEditor::value() const
@@ -78,7 +78,7 @@ float ValueVarianceEditor::value() const
 
 float ValueVarianceEditor::variance() const
 {
-    return varianceEditor_->value();
+    return spreadEditor_->value();
 }
 
 }

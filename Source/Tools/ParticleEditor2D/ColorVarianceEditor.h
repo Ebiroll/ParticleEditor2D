@@ -22,8 +22,9 @@
 
 #pragma once
 
-#include "Color.h"
+//#include "Color.h"
 #include <QGroupBox>
+#include <QColor>
 
 class QComboBox;
 class QFrame;
@@ -42,13 +43,13 @@ public:
 
 public:
     /// Set value.
-    void setValue(const Color& avarage, const Color& variance);
+    void setValue(const QColor& avarage, const QColor& variance);
     /// Return value.
-    Color avarage() const;
-    Color variance() const;
+    QColor avarage() const;
+    QColor variance() const;
 
 signals:
-    void valueChanged(const Color& avarage, const Color& variance);
+    void valueChanged(const QColor& avarage, const QColor& variance);
 
 protected slots:
     void colorModeComboBoxIndexChanged(int index);

@@ -20,8 +20,9 @@
 // THE SOFTWARE.
 //
 
-#include "Object.h"
-#include "Ptr.h"
+#include <QString>
+//#include "Object.h"
+//#include "Ptr.h"
 #include <QApplication>
 
 namespace Urho3D
@@ -37,15 +38,16 @@ class ParticleEmitter2D;
 class Scene;
 
 /// Particle editor class.
-class ParticleEditor : public QApplication, public Object
+class ParticleEditor : public QApplication
 {
     Q_OBJECT
     //OBJECT(ParticleEditor)
-     URHO3D_OBJECT(ParticleEditor, Object);
-
+    //URHO3D_OBJECT(ParticleEditor, Object);
+private:
+    QString fileName_;
 public:
     /// Construct.
-    ParticleEditor(int argc, char** argv, Context* context);
+    ParticleEditor(int argc, char** argv);
     /// Destruct.
     virtual ~ParticleEditor();
 
@@ -53,16 +55,10 @@ public:
     int Run();
 
     void New();
-    void Open(const String& fileName);
-    void Save(const String& fileName);
+    void Open(const QString& fileName);
+    void Save(const QString& fileName);
 
-    const String& GetFileName() const { return fileName_; }
-    /// Return camera.
-    Camera* GetCamera() const;
-    /// Return effect.
-    ParticleEffect2D* GetEffect() const;
-    /// Return emitter.
-    ParticleEmitter2D* GetEmitter() const;
+    const QString& GetFileName() const { return fileName_; }
 
     /// Return editor pointer.
     static ParticleEditor* Get();
@@ -73,32 +69,9 @@ private slots:
 
 private:
     /// Create scene.
-    void CreateScene();
-    /// Create console.
-    void CreateConsole();
-    /// Create debug HUD.
-    void CreateDebugHud();
-    /// Handle update event.
-    void HandleUpdate(StringHash eventType, VariantMap& eventData);
-    /// Handle key down (toggle debug HUD).
-    void HandleKeyDown(StringHash eventType, VariantMap& eventData);
-    /// Handle mouse wheel.
-    void HandleMouseWheel(StringHash eventType, VariantMap& eventData);
-    /// Handle render update.
-    void HandleRenderUpdate(StringHash eventType, VariantMap& eventData);
 
     /// Editor main window.
     MainWindow* mainWindow_;
-    /// Engine.
-    SharedPtr<Engine> engine_;
-    /// Scene.
-    SharedPtr<Scene> scene_;
-    /// File name
-    String fileName_;
-    /// Camera node.
-    SharedPtr<Node> cameraNode_;
-    /// Particle node.
-    SharedPtr<Node> particleNode_;
 };
 
 }

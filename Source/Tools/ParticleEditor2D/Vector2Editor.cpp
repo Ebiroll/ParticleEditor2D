@@ -49,21 +49,25 @@ Vector2Editor::~Vector2Editor()
 }
 
 
-void Vector2Editor::setValue(const Vector2& value)
+void Vector2Editor::setValue(const float value[2])
 {
-    xEditor_->setValue(value.x_);
-    yEditor_->setValue(value.y_);
+    xEditor_->setValue(value[0]);
+    yEditor_->setValue(value[1]);
 }
 
-Vector2 Vector2Editor::value() const
+std::vector<float> Vector2Editor::value() const
 {
-    return Vector2(xEditor_->value(), yEditor_->value());
+    std::vector<float> ret;
+    ret.push_back(xEditor_->value());
+    ret.push_back( yEditor_->value());
+
+    return ret;
 }
 
-void Vector2Editor::setRange(const Vector2& min, const Vector2& max)
+void Vector2Editor::setRange(const float  min[2], const float  max[2])
 {
-    xEditor_->setRange(min.x_, max.x_);
-    yEditor_->setRange(min.y_, max.y_);
+    xEditor_->setRange(min[0], max[0]);
+    yEditor_->setRange(min[1], max[1]);
 }
 
 void Vector2Editor::editorValueChanged()

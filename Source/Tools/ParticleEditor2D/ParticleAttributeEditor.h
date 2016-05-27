@@ -35,16 +35,16 @@ class ParticleAttributeEditor : public ScrollAreaWidget, public ParticleEffectEd
 {
     Q_OBJECT
         //OBJECT(ParticleAttributeEditor)
-    URHO3D_OBJECT(ParticleAttributeEditor, Object);
+    //URHO3D_OBJECT(ParticleAttributeEditor, Object);
 
 public:
-    ParticleAttributeEditor(Context* context);
+    ParticleAttributeEditor();
     virtual ~ParticleAttributeEditor();
 
 private slots:
     void HanldeValueVarianceEditorValueChanged(float average, float variance);
-    void HandleStartColorEditorValueChanged(const Color& average, const Color& variance);
-    void HandleFinishColorEditorValueChanged(const Color& average, const Color& variance);
+    void HandleStartColorEditorValueChanged(const QColor& average, const QColor& variance);
+    void HandleFinishColorEditorValueChanged(const QColor& average, const QColor& variance);
 
 private:
     /// Handle update widget.

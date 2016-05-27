@@ -73,48 +73,50 @@ ColorVarianceEditor::~ColorVarianceEditor()
 {   
 }
 
-void ColorVarianceEditor::setValue(const Color& value, const Color& variance)
+void ColorVarianceEditor::setValue(const QColor& value, const QColor& variance)
 {
-    Color min = value - variance;
-    Color max = value + variance;
+    QColor min = value ;
+    QColor max = value;
 
-    minREditor_->setValue(min.r_);
-    minGEditor_->setValue(min.g_);
-    minBEditor_->setValue(min.b_);
-    minAEditor_->setValue(min.a_);
+    minREditor_->setValue(min.redF());
+    minGEditor_->setValue(min.greenF());
+    minBEditor_->setValue(min.blueF());
+    minAEditor_->setValue(min.alphaF());
 
-    maxREditor_->setValue(max.r_);
-    maxGEditor_->setValue(max.g_);
-    maxBEditor_->setValue(max.b_);
-    maxAEditor_->setValue(max.a_);
+    maxREditor_->setValue(max.redF());
+    maxGEditor_->setValue(max.greenF());
+    maxBEditor_->setValue(max.blueF());
+    maxAEditor_->setValue(max.alphaF());
 
-    colorModeComboBox_->setCurrentIndex(variance == Color::TRANSPARENT ? 0 : 1);
+    //colorModeComboBox_->setCurrentIndex(variance == QColor::TRANSPARENT ? 0 : 1);
 }
 
-Color ColorVarianceEditor::avarage() const
+QColor ColorVarianceEditor::avarage() const
 {
-    Color min = Color(minREditor_->value(), minGEditor_->value(), minBEditor_->value(), minAEditor_->value());
-    Color max = Color(maxREditor_->value(), maxGEditor_->value(), maxBEditor_->value(), maxAEditor_->value());
-    return (min + max) * 0.5f;
+    QColor min = QColor(minREditor_->value(), minGEditor_->value(), minBEditor_->value(), minAEditor_->value());
+    QColor max = QColor(maxREditor_->value(), maxGEditor_->value(), maxBEditor_->value(), maxAEditor_->value());
+    //return (min + max) * 0.5f;
+    return max;
 }
 
-Color ColorVarianceEditor::variance() const
+QColor ColorVarianceEditor::variance() const
 {
-    Color min = Color(minREditor_->value(), minGEditor_->value(), minBEditor_->value(), minAEditor_->value());
-    Color max = Color(maxREditor_->value(), maxGEditor_->value(), maxBEditor_->value(), maxAEditor_->value());
-    return (max - min) * 0.5f;
+    QColor min = QColor(minREditor_->value(), minGEditor_->value(), minBEditor_->value(), minAEditor_->value());
+    QColor max = QColor(maxREditor_->value(), maxGEditor_->value(), maxBEditor_->value(), maxAEditor_->value());
+    //return (max - min) * 0.5f;
+    return min;
 }
 
 void ColorVarianceEditor::editorValueChanged()
 {   
-    Color min = Color(minREditor_->value(), minGEditor_->value(), minBEditor_->value(), minAEditor_->value());
-    Color max = Color(maxREditor_->value(), maxGEditor_->value(), maxBEditor_->value(), maxAEditor_->value());
+    QColor min = QColor(minREditor_->value(), minGEditor_->value(), minBEditor_->value(), minAEditor_->value());
+    QColor max = QColor(maxREditor_->value(), maxGEditor_->value(), maxBEditor_->value(), maxAEditor_->value());
 
     if (colorModeComboBox_->currentIndex() == 0)
         max = min;
 
-    QColor qMinColor = QColor::fromRgbF(min.r_, min.g_, min.b_, min.a_);
-    QColor qMaxColor = QColor::fromRgbF(max.r_, max.g_, max.b_, max.a_);
+    QColor qMinColor = min; //QColor::fromRgbF(min.r_, min.g_, min.b_, min.a_);
+    QColor qMaxColor = max; //QColor::fromRgbF(max.r_, max.g_, max.b_, max.a_);
     char styleSheet[256];
     sprintf(styleSheet, "background-color: qlineargradient(x1:0, y1:0.5, x2:1, y2:0.5, stop:0 rgba(%d, %d, %d, %d), stop:1 rgba(%d, %d, %d, %d))", 
         qMinColor.red(), qMinColor.green(), qMinColor.blue(), qMinColor.alpha(),
@@ -122,7 +124,8 @@ void ColorVarianceEditor::editorValueChanged()
 
     frame_->setStyleSheet(styleSheet);
 
-    emit valueChanged((min + max) * 0.5f, (max - min) * 0.5f);
+    //emit valueChanged((min + max) * 0.5f, (max - min) * 0.5f);
+    emit qMinColor;
 }
 
 void ColorVarianceEditor::colorModeComboBoxIndexChanged(int index)

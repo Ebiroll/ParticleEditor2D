@@ -20,16 +20,20 @@
 // THE SOFTWARE.
 //
 
-#include "Context.h"
-#include "CoreEvents.h"
+#include "particle_fx.h"
+
+#include <qobject.h>
+
+//#include "Context.h"
+//#include "CoreEvents.h"
 #include "EmitterAttributeEditor.h"
 #include "FloatEditor.h"
 #include "IntEditor.h"
-#include "Sprite2D.h"
-#include "ParticleEffect2D.h"
-#include "ParticleEmitter2D.h"
-#include "ResourceCache.h"
-#include "Texture2D.h"
+//#include "Sprite2D.h"
+//#include "ParticleEffect2D.h"
+//#include "ParticleEmitter2D.h"
+//#include "ResourceCache.h"
+//#include "Texture2D.h"
 #include "ValueVarianceEditor.h"
 #include "Vector2Editor.h"
 #include <QApplication>
@@ -41,12 +45,12 @@
 
 namespace Urho3D
 {
-EmitterAttributeEditor::EmitterAttributeEditor(Context* context) :
-    ParticleEffectEditor(context),
+EmitterAttributeEditor::EmitterAttributeEditor() :
+    //ParticleEffectEditor(context),
     maxParticlesChanged_(false)
 {
     CreateMaxParticlesEditor();
-    CreateDurationEditor();
+    Createx_angleVarianceEditor();
     
     vBoxLayout_->addSpacing(8);
 
@@ -66,7 +70,7 @@ EmitterAttributeEditor::EmitterAttributeEditor(Context* context) :
 
     vBoxLayout_->addStretch(1);
 
-    SubscribeToEvent(E_POSTUPDATE, URHO3D_HANDLER(EmitterAttributeEditor, HandlePostUpdate));
+    //SubscribeToEvent(E_POSTUPDATE, URHO3D_HANDLER(EmitterAttributeEditor, HandlePostUpdate));
 }
 
 EmitterAttributeEditor::~EmitterAttributeEditor()
@@ -81,12 +85,12 @@ void EmitterAttributeEditor::HandleMaxParticlesEditorValueChanged(int value)
     maxParticlesChanged_ = true;
 }
 
-void EmitterAttributeEditor::HandleDurationEditorValueChanged(float value)
+void EmitterAttributeEditor::HandleXAngleValueChanged(float value,float spread)
 {
     if (updatingWidget_)
         return;
 
-    GetEffect()->SetDuration(value);
+    //GetEffect()->SetDuration(value);
 }
 
 void EmitterAttributeEditor::HandleTexturePushButtonClicked()
@@ -101,15 +105,15 @@ void EmitterAttributeEditor::HandleTexturePushButtonClicked()
 
     fileName = fileName.right(fileName.length() - dataPath.length());
 
-    ResourceCache* cache = GetSubsystem<ResourceCache>();
-    Sprite2D* sprite = cache->GetResource<Sprite2D>(fileName.toLatin1().data());
-    if (!sprite)
-        return;
+    //ResourceCache* cache = GetSubsystem<ResourceCache>();
+    //Sprite2D* sprite = cache->GetResource<Sprite2D>(fileName.toLatin1().data());
+    //if (!sprite)
+    //    return;
 
     textureEditor_->setText(fileName);
 
-    GetEffect()->SetSprite(sprite);
-    GetEmitter()->SetSprite(sprite);
+    //GetEffect()->SetSprite(sprite);
+    //GetEmitter()->SetSprite(sprite);
 }
 
 void EmitterAttributeEditor::HandleBlendModeEditorChanged(int index)
@@ -117,28 +121,29 @@ void EmitterAttributeEditor::HandleBlendModeEditorChanged(int index)
     if (updatingWidget_)
         return;
 
-    GetEffect()->SetBlendMode((BlendMode)index);
-    GetEmitter()->SetBlendMode((BlendMode)index);
+    //GetEffect()->SetBlendMode((BlendMode)index);
+    //GetEmitter()->SetBlendMode((BlendMode)index);
 }
 
 void EmitterAttributeEditor::HandleEmitterTypeEditorChanged(int index)
 {
-    EmitterType2D emitterType = (EmitterType2D)index;
-    ShowGravityTypeEditor(emitterType == EMITTER_TYPE_GRAVITY);
-    ShowRadialTypeEditor(emitterType != EMITTER_TYPE_GRAVITY);
+    uint16_t emitterType = index;
+    ShowGravityTypeEditor(emitterType == vis::EMITTER_TYPE_BOX);
+    ShowRadialTypeEditor(emitterType != vis::EMITTER_TYPE_BOX);
 
     if (updatingWidget_)
         return;
 
-    GetEffect()->SetEmitterType(emitterType);
+    //GetEffect()->SetEmitterType(emitterType);
 }
 
+#if 0
 void EmitterAttributeEditor::HandleSourcePositionVarianceEditorValueChanged(const Vector2& value)
 {
     if (updatingWidget_)
         return;
 
-    GetEffect()->SetSourcePositionVariance(value);
+    //GetEffect()->SetSourcePositionVariance(value);
 }
 
 void EmitterAttributeEditor::HandleGravityEditorValueChanged(const Vector2& value)
@@ -148,14 +153,14 @@ void EmitterAttributeEditor::HandleGravityEditorValueChanged(const Vector2& valu
 
     GetEffect()->SetGravity(value);
 }
-
+#endif
 void EmitterAttributeEditor::HandleValueVarianceEditorValueChanged(float average, float variance)
 {
     if (updatingWidget_)
         return;
-
+#if 0
     QObject* s = sender();
-    ParticleEffect2D* effect = GetEffect();
+    //ParticleEffect2D* effect = GetEffect();
 
     if (s == speedEditor_)
     {
@@ -194,17 +199,19 @@ void EmitterAttributeEditor::HandleValueVarianceEditorValueChanged(float average
         effect->SetRotatePerSecond(rotatePerSecondEditor_->value());
         effect->SetRotatePerSecondVariance(rotatePerSecondEditor_->variance());
     }
+#endif
 }
 
 void EmitterAttributeEditor::HandleUpdateWidget()
 {
+#if 0
     ParticleEffect2D* effect_ = GetEffect();
 
     maxParticlesEditor_->setValue(effect_->GetMaxParticles());
     durationEditor_->setValue(effect_->GetDuration());
 
-    Sprite2D* sprite = effect_->GetSprite();
-    textureEditor_->setText(sprite ? sprite->GetName().CString() : "");
+    //Sprite2D* sprite = effect_->GetSprite();
+    //textureEditor_->setText(sprite ? sprite->GetName().CString() : "");
 
     blendModeEditor_->setCurrentIndex((int)effect_->GetBlendMode());
     
@@ -221,24 +228,28 @@ void EmitterAttributeEditor::HandleUpdateWidget()
     maxRadiusEditor_->setValue(effect_->GetMaxRadius(), effect_->GetMaxRadiusVariance());
     minRadiusEditor_->setValue(effect_->GetMinRadius(), effect_->GetMinRadiusVariance());
     rotatePerSecondEditor_->setValue(effect_->GetRotatePerSecond(), effect_->GetRotatePerSecondVariance());
+#endif
 }
 
 void EmitterAttributeEditor::CreateMaxParticlesEditor()
 {
-    maxParticlesEditor_ = new IntEditor(tr("MaxParticles"));
+    maxParticlesEditor_ = new IntEditor(tr("max_particles"));
     vBoxLayout_->addLayout(maxParticlesEditor_);
     
     maxParticlesEditor_->setRange(1, 2048);    
     connect(maxParticlesEditor_, SIGNAL(valueChanged(int)), this, SLOT(HandleMaxParticlesEditorValueChanged(int)));
 }
 
-void EmitterAttributeEditor::CreateDurationEditor()
+void EmitterAttributeEditor::Createx_angleVarianceEditor()
 {
-    durationEditor_ = new FloatEditor(tr("Duration"));
-    vBoxLayout_->addLayout(durationEditor_);
+    x_angleVarianceEditor_=new ValueVarianceEditor(tr("x_angle"));
+    x_angleVarianceEditor_->setValue(0.0f,3.14f);
+    x_angleVarianceEditor_->setRange(-3.14f,3.14f);
+
+    vBoxLayout_->addWidget(x_angleVarianceEditor_);
     
-    durationEditor_->setRange(-1.0f, 100.0f);    
-    connect(durationEditor_, SIGNAL(valueChanged(float)), this, SLOT(HandleDurationEditorValueChanged(float)));
+    //durationEditor_->setRange(-1.0f, 100.0f);
+    connect(x_angleVarianceEditor_, SIGNAL(valueChanged(float,float)), this, SLOT(HandleXAngleValueChanged(float,float)));
 }
 
 void EmitterAttributeEditor::CreateTextureEditor()
@@ -281,8 +292,8 @@ void EmitterAttributeEditor::CreateBlendModeEditor()
         0
     };
 
-    for (unsigned i = 0; i < MAX_BLENDMODES; ++i)
-        blendModeEditor_->addItem(blendModeNames[i], i);
+    //for (unsigned i = 0; i < MAX_BLENDMODES; ++i)
+    //    blendModeEditor_->addItem(blendModeNames[i], i);
 
     connect(blendModeEditor_,SIGNAL(currentIndexChanged(int)),this,SLOT(HandleBlendModeEditorChanged(int)));
 }
@@ -292,8 +303,9 @@ void EmitterAttributeEditor::CreateEmitterTypeEditor()
     emitterTypeEditor_ = new QComboBox();
     vBoxLayout_->addWidget(emitterTypeEditor_, 1);
 
-    emitterTypeEditor_->addItem(tr("Gravity Emitter Type"));
-    emitterTypeEditor_->addItem(tr("Radial Emitter Type"));
+    emitterTypeEditor_->addItem(tr("BOX Emitter Type"));
+    emitterTypeEditor_->addItem(tr("Sphere Emitter Type"));
+    emitterTypeEditor_->addItem(tr("Cube Emitter Type"));
     emitterTypeEditor_->setCurrentIndex(-1);
 
     connect(emitterTypeEditor_, SIGNAL(currentIndexChanged(int)), this, SLOT(HandleEmitterTypeEditorChanged(int)));
@@ -304,7 +316,7 @@ void EmitterAttributeEditor::CreateGravityTypeEditor()
     sourcePositionVarianceEditor_ = new Vector2Editor(tr("SourcePositionVariance"));
     vBoxLayout_->addWidget(sourcePositionVarianceEditor_);
     
-    sourcePositionVarianceEditor_->setRange(Vector2::ZERO, Vector2::ONE * 1000.0f);    
+    //sourcePositionVarianceEditor_->setRange(Vector2::ZERO, Vector2::ONE * 1000.0f);
     connect(sourcePositionVarianceEditor_, SIGNAL(valueChanged(const Vector2&)), this, SLOT(HandleSourcePositionVarianceEditorValueChanged(const Vector2&)));
 
     speedEditor_ = CreateValueVarianceEditor(tr("Speed"), 0.0f, 2000.0f);
@@ -312,7 +324,7 @@ void EmitterAttributeEditor::CreateGravityTypeEditor()
     gravityEditor_ = new Vector2Editor(tr("Gravity"));
     vBoxLayout_->addWidget(gravityEditor_);
 
-    gravityEditor_->setRange(Vector2::ONE * -3000.0f, Vector2::ONE * 3000.0f);
+    //gravityEditor_->setRange(Vector2::ONE * -3000.0f, Vector2::ONE * 3000.0f);
     connect(gravityEditor_, SIGNAL(valueChanged(const Vector2&)), this, SLOT(HandleGravityEditorValueChanged(const Vector2&)));
 
     radialAccelerationEditor_ = CreateValueVarianceEditor(tr("Radial Acceleration"), -10000.0f, 10000.0f);
@@ -356,6 +368,7 @@ ValueVarianceEditor* EmitterAttributeEditor::CreateValueVarianceEditor(const QSt
     return editor;
 }
 
+#if 0
 void EmitterAttributeEditor::HandlePostUpdate(StringHash eventType, VariantMap& eventData)
 {
     if (!maxParticlesChanged_)
@@ -363,8 +376,8 @@ void EmitterAttributeEditor::HandlePostUpdate(StringHash eventType, VariantMap& 
 
     maxParticlesChanged_ = false;
 
-    GetEffect()->SetMaxParticles(maxParticlesEditor_->value());
-    GetEmitter()->SetMaxParticles(maxParticlesEditor_->value());
+    //GetEffect()->SetMaxParticles(maxParticlesEditor_->value());
+    //GetEmitter()->SetMaxParticles(maxParticlesEditor_->value());
 }
-
+#endif
 }

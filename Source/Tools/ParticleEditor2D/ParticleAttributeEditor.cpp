@@ -22,14 +22,13 @@
 
 #include "ColorVarianceEditor.h"
 #include "ParticleAttributeEditor.h"
-#include "ParticleEffect2D.h"
 #include "ValueVarianceEditor.h"
 #include <QVBoxLayout>
 
 namespace Urho3D
 {
-ParticleAttributeEditor::ParticleAttributeEditor(Context* context) :
-    ParticleEffectEditor(context)
+ParticleAttributeEditor::ParticleAttributeEditor() :
+    ParticleEffectEditor()
 {
     particleLifeSpanEditor_ = CreateValueVarianceEditor(tr("Life Span"), 0.01f, 10.0f);
     
@@ -58,7 +57,7 @@ void ParticleAttributeEditor::HanldeValueVarianceEditorValueChanged(float averag
 {
     if (updatingWidget_)
         return;
-
+#if 0
     ParticleEffect2D* effect = GetEffect();
     QObject* s = sender();
     if (s == particleLifeSpanEditor_)
@@ -86,11 +85,13 @@ void ParticleAttributeEditor::HanldeValueVarianceEditorValueChanged(float averag
         effect->SetRotationEnd(average);
         effect->SetRotationEndVariance(variance);
     }
+#endif
 }
 
 
 void ParticleAttributeEditor::HandleUpdateWidget()
 {
+#if 0
     ParticleEffect2D* effect = GetEffect();
 
     particleLifeSpanEditor_->setValue(effect->GetParticleLifeSpan(), effect->GetParticleLifespanVariance());
@@ -108,6 +109,7 @@ void ParticleAttributeEditor::HandleUpdateWidget()
     const Color& finishColor = effect->GetFinishColor();
     const Color& finishColorVariance = effect->GetFinishColorVariance();
     finishColorEditor_->setValue(finishColor, finishColorVariance);
+#endif
 }
 
 ValueVarianceEditor* ParticleAttributeEditor::CreateValueVarianceEditor(const QString& name, float min, float max)
@@ -120,22 +122,22 @@ ValueVarianceEditor* ParticleAttributeEditor::CreateValueVarianceEditor(const QS
 }
 
 
-void ParticleAttributeEditor::HandleStartColorEditorValueChanged(const Color& average, const Color& variance)
+void ParticleAttributeEditor::HandleStartColorEditorValueChanged(const QColor& average, const QColor& variance)
 {
     if (updatingWidget_)
         return;
-    ParticleEffect2D* effect = GetEffect();
-    effect->SetStartColor(average);
-    effect->SetStartColorVariance(variance);
+    //ParticleEffect2D* effect = GetEffect();
+    //effect->SetStartColor(average);
+    //effect->SetStartColorVariance(variance);
 }
 
-void ParticleAttributeEditor::HandleFinishColorEditorValueChanged(const Color& average, const Color& variance)
+void ParticleAttributeEditor::HandleFinishColorEditorValueChanged(const QColor& average, const QColor& variance)
 {
     if (updatingWidget_)
         return;
 
-    ParticleEffect2D* effect_ = GetEffect();
-    effect_->SetFinishColor(average);
-    effect_->SetFinishColorVariance(variance);
+    //ParticleEffect2D* effect_ = GetEffect();
+    //effect_->SetFinishColor(average);
+    //effect_->SetFinishColorVariance(variance);
 }
 }

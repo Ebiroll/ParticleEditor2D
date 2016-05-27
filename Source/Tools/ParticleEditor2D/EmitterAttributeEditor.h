@@ -39,25 +39,26 @@ class Vector2Editor;
 class EmitterAttributeEditor : public ScrollAreaWidget, public ParticleEffectEditor
 {
     Q_OBJECT
-        //OBJECT(EmitterAttributeEditor)
+    //OBJECT(EmitterAttributeEditor)
 
-    URHO3D_OBJECT(EmitterAttributeEditor, Object);
+    //URHO3D_OBJECT(EmitterAttributeEditor, Object);
 
 
 
 public:
-    EmitterAttributeEditor(Context* context);
+    EmitterAttributeEditor();
     virtual ~EmitterAttributeEditor();
 
 private slots:
     void HandleMaxParticlesEditorValueChanged(int value);
-    void HandleDurationEditorValueChanged(float value);    
+    void HandleXAngleValueChanged(float value,float spread);
+
     void HandleTexturePushButtonClicked();
     void HandleBlendModeEditorChanged(int index);
     
     void HandleEmitterTypeEditorChanged(int index);
-    void HandleSourcePositionVarianceEditorValueChanged(const Vector2& value);
-    void HandleGravityEditorValueChanged(const Vector2& value);
+    //void HandleSourcePositionVarianceEditorValueChanged(const Vector2& value);
+    //void HandleGravityEditorValueChanged(const Vector2& value);
 
     void HandleValueVarianceEditorValueChanged(float average, float variance);
 
@@ -65,7 +66,7 @@ private:
     virtual void HandleUpdateWidget();
 
     void CreateMaxParticlesEditor();
-    void CreateDurationEditor();
+    void Createx_angleVarianceEditor();
     void CreateTextureEditor();
     void CreateBlendModeEditor();
 
@@ -76,12 +77,44 @@ private:
     void ShowGravityTypeEditor(bool visible);
     ValueVarianceEditor* CreateValueVarianceEditor(const QString& name, float min, float max);
 
-    void HandlePostUpdate(StringHash eventType, VariantMap& eventData);
+    //void HandlePostUpdate(StringHash eventType, VariantMap& eventData);
 
     /// Max particle editor.
     IntEditor* maxParticlesEditor_;
     /// Is max particles changed.
     bool maxParticlesChanged_;
+
+   ValueVarianceEditor* x_angleVarianceEditor_;
+
+#if 0
+    x_angle = f0.0
+    x_angle_spread = f3.14
+    y_angle = f0.0
+    y_angle_spread = f3.14
+    speed = f0.0
+    speed_spread = f0.4
+    rotation = f0.0
+    rotation_spread = f3.14
+    rotation_speed = f0.0
+    rotation_speed_spread = f0.0
+    size = f0.5
+    size_spread = f0.25
+    duration = f15.0
+    duration_spread = f0.0
+    emit_rate = f3.0
+    animation = 45
+    animation_spread = 15
+    animation_x = 8
+    animation_y = 8
+    color = f[0.8, 0.5, 0.2, 1.0]
+    max_particles = 60
+    texture = 'explosion.dds'
+    id = 0
+    emitter_type = 1
+    emitter_size = f[0.0, 0.5]
+#endif
+
+
     /// Duration editor.
     FloatEditor* durationEditor_;
     /// Texture editor.

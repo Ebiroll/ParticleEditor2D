@@ -27,8 +27,8 @@
 
 namespace Urho3D
 {
-ParticleEffectEditor::ParticleEffectEditor(Context* context) : 
-    Object(context),
+ParticleEffectEditor::ParticleEffectEditor() :
+    //Object(context),
     updatingWidget_(false)
 {
 
@@ -48,14 +48,5 @@ void ParticleEffectEditor::UpdateWidget()
     updatingWidget_ = false;
 }
 
-ParticleEffect2D* ParticleEffectEditor::GetEffect() const
-{
-    return ParticleEditor::Get()->GetEffect();
-}
-
-ParticleEmitter2D* ParticleEffectEditor::GetEmitter() const
-{
-    return ParticleEditor::Get()->GetEmitter();
-}
 
 }

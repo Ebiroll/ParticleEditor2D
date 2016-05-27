@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Object.h"
+#include <QObject>
 
 namespace Urho3D
 {
@@ -34,13 +34,13 @@ class ParticleEmitter2D;
 
 
 
-class ParticleEffectEditor : public Object
+class ParticleEffectEditor
 {
     //OBJECT(ParticleEffectEditor)
-    URHO3D_OBJECT(ParticleEffectEditor, Object);
+    //URHO3D_OBJECT(ParticleEffectEditor, Object);
 
 public:
-    ParticleEffectEditor(Context* context);
+    ParticleEffectEditor();
     virtual ~ParticleEffectEditor();
 
     /// Update widget.
@@ -51,9 +51,9 @@ protected:
     virtual void HandleUpdateWidget() = 0;
 
     /// Return particle effect.
-    ParticleEffect2D* GetEffect() const;
+    //ParticleEffect2D* GetEffect() const;
     /// Return particle emitter.
-    ParticleEmitter2D* GetEmitter() const;
+    //ParticleEmitter2D* GetEmitter() const;
 
     /// Is updating widget.
     bool updatingWidget_;

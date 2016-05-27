@@ -22,9 +22,7 @@
 
 #pragma once
 
-#include "Object.h"
 #include "ParticleEffectEditor.h"
-#include "Ptr.h"
 #include <QMainWindow>
 #include <QMap>
 
@@ -44,11 +42,11 @@ class MainWindow : public QMainWindow, public ParticleEffectEditor
 {
     Q_OBJECT
     //OBJECT(MainWindow)
-    URHO3D_OBJECT(MainWindow, Object);
+    //URHO3D_OBJECT(MainWindow, Object);
 
 public:
     /// Construct.
-    MainWindow(Context* context);
+    MainWindow();
     
     /// Create widgets.
     void CreateWidgets();

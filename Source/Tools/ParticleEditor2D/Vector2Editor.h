@@ -22,9 +22,9 @@
 
 #pragma once
 
-#include "Vector2.h"
+//#include "Vector2.h"
 #include <QGroupBox>
-
+#include <vector>
 namespace Urho3D
 {
 
@@ -40,15 +40,16 @@ public:
 
 public:
     /// Set value.
-    void setValue(const Vector2& value);
+    void setValue(const float value[2]);
     /// Return value.
-    Vector2 value() const;
+     std::vector<float> value() const;
 
     /// Set range.
-    void setRange(const Vector2& min, const Vector2& max);
+    //void setRange(const Vector2& min, const Vector2& max);
+    void setRange(const float  min[2], const float  max[2]);
 
 signals:
-    void valueChanged(const Vector2&);
+    void valueChanged(std::vector<float>);
 
 protected slots:
     void editorValueChanged();

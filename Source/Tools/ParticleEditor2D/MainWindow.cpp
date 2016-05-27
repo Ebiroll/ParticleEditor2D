@@ -20,14 +20,10 @@
 // THE SOFTWARE.
 //
 
-#include "Camera.h"
-#include "Context.h"
 #include "EmitterAttributeEditor.h"
 #include "MainWindow.h"
 #include "ParticleAttributeEditor.h"
 #include "ParticleEditor.h"
-#include "Renderer.h"
-#include "Zone.h"
 #include <QAction>
 #include <QColorDialog>
 #include <QDockWidget>
@@ -43,9 +39,9 @@
 namespace Urho3D
 {
 
-MainWindow::MainWindow(Context* context) :
+MainWindow::MainWindow() :
     QMainWindow(0, 0),
-    ParticleEffectEditor(context),
+    ParticleEffectEditor(),
     emitterAttributeEditor_(0),
     particleAttributeEditor_(0)
 {
@@ -170,7 +166,7 @@ void MainWindow::CreateToolBar()
 
 void MainWindow::CreateDockWidgets()
 {
-    emitterAttributeEditor_ = new EmitterAttributeEditor(context_);
+    emitterAttributeEditor_ = new EmitterAttributeEditor();
 
     QDockWidget* eaDockWidget = new QDockWidget(tr("Emitter Attributes"));
     addDockWidget(Qt::LeftDockWidgetArea, eaDockWidget);
@@ -182,7 +178,7 @@ void MainWindow::CreateDockWidgets()
     viewMenu_->addAction(eaToggleViewAction);
     eaToggleViewAction->setShortcut(QKeySequence::fromString("Ctrl+E"));
 
-    particleAttributeEditor_ = new ParticleAttributeEditor(context_);
+    particleAttributeEditor_ = new ParticleAttributeEditor();
 
     QDockWidget* paDockWidget = new QDockWidget(tr("Particle Attributes"));
     addDockWidget(Qt::RightDockWidgetArea, paDockWidget);
@@ -212,8 +208,8 @@ void MainWindow::HandleOpenAction()
 
 void MainWindow::HandleSaveAction()
 {
-    const String& fileName = ParticleEditor::Get()->GetFileName();
-    if (fileName.Empty())
+    const QString& fileName = ParticleEditor::Get()->GetFileName();
+    if (fileName.size()==0)
         HandleSaveAsAction();
     else
         ParticleEditor::Get()->Save(fileName);
@@ -230,6 +226,7 @@ void MainWindow::HandleSaveAsAction()
 
 void MainWindow::HandleZoomAction()
 {
+#if 0
     Camera* camera = ParticleEditor::Get()->GetCamera();
     
     QObject* s = sender();
@@ -239,10 +236,12 @@ void MainWindow::HandleZoomAction()
         camera->SetZoom(camera->GetZoom() * 0.80f);
     else if (s == zoomResetAction_)
         camera->SetZoom(1.0f);
+#endif
 }
 
 void MainWindow::HandleBackgroundAction()
 {
+#if 0
     Renderer* renderer = GetSubsystem<Renderer>();
     const Color& color = renderer->GetDefaultZone()->GetFogColor();
     
@@ -251,6 +250,7 @@ void MainWindow::HandleBackgroundAction()
     
     Color newColor(newQcolor.redF(), newQcolor.greenF(), newQcolor.blueF());
     renderer->GetDefaultZone()->SetFogColor(newColor);
+#endif
 }
 
 }

@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "Vector2.h"
+//#include "Vector2.h"
 #include <QGroupBox>
 
 namespace Urho3D
@@ -40,21 +40,21 @@ public:
 
 public:
     /// Set value.
-    void setValue(float avarage, float variance);
+    void setValue(float avarage, float spread);
     void setRange(float min, float max);
 
     float value() const;
     float variance() const;
 
 signals:
-    void valueChanged(float average, float variance);
+    void valueChanged(float average, float spread);
 
 protected slots:
     void editorValueChanged();
 
 private:
     FloatEditor* averageEditor_;
-    FloatEditor* varianceEditor_;
+    FloatEditor* spreadEditor_;
 };
 
 }
