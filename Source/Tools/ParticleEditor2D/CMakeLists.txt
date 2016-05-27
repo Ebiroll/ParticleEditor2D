@@ -29,7 +29,17 @@ add_definitions(${QT_DEFINITIONS})
 
 # Find Urho3D library
 # find_package (Urho3D REQUIRED)
-# include_directories (${URHO3D_INCLUDE_DIRS})
+include_directories (${URHO3D_INCLUDE_DIRS})
+include_directories (/home/olas/work/Urho3D/Source/Urho3D/Graphics/)
+include_directories (/home/olas/work/Urho3D/Source/Urho3D/Core/)
+include_directories (/home/olas/work/Urho3D/Source/Urho3D/Container/)
+include_directories (/home/olas/work/Urho3D/Source/Urho3D/Math/)
+include_directories (/home/olas/work/Urho3D/Source/Urho3D/Urho2D/)
+include_directories (/home/olas/work/Urho3D/Source/Urho3D/Engine/)
+include_directories (/home/olas/work/Urho3D/Source/Urho3D/Input/)
+include_directories (/home/olas/work/Urho3D/Source/Urho3D/IO/)
+include_directories (/home/olas/work/Urho3D/Source/Urho3D/Resource/)
+include_directories (/home/olas/work/Urho3D/Source/Urho3D/Scene/)
 
 # INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
 
@@ -52,4 +62,4 @@ set (SOURCE_FILES ${SOURCE_FILES} ${MOC_FILES} ${UI_HEADERS} ${RCC_FILES})
 # Setup target with resource copying
 setup_main_executable ()
 
-target_link_libraries(${TARGET_NAME} ${QT_LIBRARIES})
+target_link_libraries(${TARGET_NAME} ${QT_LIBRARIES} QtOpenGL X11)

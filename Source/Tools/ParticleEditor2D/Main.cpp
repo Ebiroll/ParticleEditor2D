@@ -20,10 +20,11 @@
 // THE SOFTWARE.
 //
 
-#include "Application.h"
+//#include "Application.h"
 #include "ParticleEditor.h"
 #include <QFile>
-
+#include "Context.h"
+#include "ProcessUtils.h"
 int Main()
 {
     int argc = 0;
@@ -38,4 +39,9 @@ int Main()
     return editor.Run();
 }
 
-DEFINE_MAIN(Main());
+//URHO3D_DEFINE_MAIN(Main());
+int main(int argc, char** argv)
+{
+    Urho3D::ParseArguments(argc, argv);
+    return Main();
+}

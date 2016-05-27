@@ -25,6 +25,7 @@
 #include "EmitterAttributeEditor.h"
 #include "FloatEditor.h"
 #include "IntEditor.h"
+#include "Sprite2D.h"
 #include "ParticleEffect2D.h"
 #include "ParticleEmitter2D.h"
 #include "ResourceCache.h"
@@ -33,7 +34,7 @@
 #include "Vector2Editor.h"
 #include <QApplication>
 #include <QComboBox>
-#include <QFileDialog.h>
+#include <QFileDialog>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
@@ -65,7 +66,7 @@ EmitterAttributeEditor::EmitterAttributeEditor(Context* context) :
 
     vBoxLayout_->addStretch(1);
 
-    SubscribeToEvent(E_POSTUPDATE, HANDLER(EmitterAttributeEditor, HandlePostUpdate));
+    SubscribeToEvent(E_POSTUPDATE, URHO3D_HANDLER(EmitterAttributeEditor, HandlePostUpdate));
 }
 
 EmitterAttributeEditor::~EmitterAttributeEditor()

@@ -30,9 +30,14 @@ class ParticleEffect2D;
 class ParticleEmitter2D;
 
 /// Particle effect editor interface.
+///
+
+
+
 class ParticleEffectEditor : public Object
 {
-    OBJECT(ParticleEffectEditor)
+    //OBJECT(ParticleEffectEditor)
+    URHO3D_OBJECT(ParticleEffectEditor, Object);
 
 public:
     ParticleEffectEditor(Context* context);

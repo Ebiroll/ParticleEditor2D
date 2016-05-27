@@ -40,7 +40,8 @@ class Scene;
 class ParticleEditor : public QApplication, public Object
 {
     Q_OBJECT
-    OBJECT(ParticleEditor)
+    //OBJECT(ParticleEditor)
+     URHO3D_OBJECT(ParticleEditor, Object);
 
 public:
     /// Construct.

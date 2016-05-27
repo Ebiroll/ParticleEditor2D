@@ -43,7 +43,8 @@ class ScrollAreaWidget;
 class MainWindow : public QMainWindow, public ParticleEffectEditor
 {
     Q_OBJECT
-    OBJECT(MainWindow)
+    //OBJECT(MainWindow)
+    URHO3D_OBJECT(MainWindow, Object);
 
 public:
     /// Construct.

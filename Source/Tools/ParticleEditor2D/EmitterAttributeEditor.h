@@ -39,7 +39,11 @@ class Vector2Editor;
 class EmitterAttributeEditor : public ScrollAreaWidget, public ParticleEffectEditor
 {
     Q_OBJECT
-        OBJECT(EmitterAttributeEditor)
+        //OBJECT(EmitterAttributeEditor)
+
+    URHO3D_OBJECT(EmitterAttributeEditor, Object);
+
+
 
 public:
     EmitterAttributeEditor(Context* context);

@@ -36,6 +36,10 @@
 #include <QMenuBar>
 #include <QToolBar>
 
+//#include <QtGui/QWindow>
+//#include <QtGui/QOpenGLFunctions>
+#include <QtOpenGL/QGLWidget>
+
 namespace Urho3D
 {
 
@@ -48,6 +52,9 @@ MainWindow::MainWindow(Context* context) :
     setWindowIcon(QIcon(":/Images/Icon.png"));
     showMaximized();
 
+    //setSurfaceType(QWindow::OpenGLSurface);
+
+    //QWidget* widget = new QGLWidget();
     QWidget* widget = new QWidget();
     setCentralWidget(widget);
     
@@ -193,7 +200,10 @@ void MainWindow::HandleNewAction()
 
 void MainWindow::HandleOpenAction()
 {
-    QString fileName = QFileDialog::getOpenFileName(0, tr("Open particle"), "./Data/Urho2D/", "*.pex");
+//    ileName = QFileDialog::getOpenFileName(this,
+//        tr("Open Image"), "/home/jana", tr("Image Files (*.png *.jpg *.bmp)"));
+
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open particle"), "Data/Urho2D/", tr("Pex files *.pex"));
     if (fileName.isEmpty())
         return;
 
@@ -211,7 +221,7 @@ void MainWindow::HandleSaveAction()
 
 void MainWindow::HandleSaveAsAction()
 {
-    QString fileName = QFileDialog::getSaveFileName(0, tr("Open particle"), "./Data/Urho2D/", "*.pex");
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save particle"), "Data/Urho2D/", tr("*.pex"));
     if (fileName.isEmpty())
         return;
 

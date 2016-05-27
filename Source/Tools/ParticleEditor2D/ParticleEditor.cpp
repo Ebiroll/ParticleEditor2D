@@ -45,6 +45,8 @@
 #include <QFile>
 #include <QTimer>
 
+#include <X11/Xlib.h>
+#include <Qt/qx11info_x11.h>
 namespace Urho3D
 {
 
@@ -55,10 +57,10 @@ ParticleEditor::ParticleEditor(int argc, char** argv, Context* context) :
     scene_(new Scene(context_)),
     mainWindow_(new MainWindow(context_))
 {
-    SubscribeToEvent(E_UPDATE, HANDLER(ParticleEditor, HandleUpdate));
-    SubscribeToEvent(E_KEYDOWN, HANDLER(ParticleEditor, HandleKeyDown));
-    SubscribeToEvent(E_MOUSEWHEEL, HANDLER(ParticleEditor, HandleMouseWheel));
-    SubscribeToEvent(E_RENDERUPDATE, HANDLER(ParticleEditor, HandleRenderUpdate));
+    SubscribeToEvent(E_UPDATE, URHO3D_HANDLER(ParticleEditor, HandleUpdate));
+    SubscribeToEvent(E_KEYDOWN, URHO3D_HANDLER(ParticleEditor, HandleKeyDown));
+    SubscribeToEvent(E_MOUSEWHEEL, URHO3D_HANDLER(ParticleEditor, HandleMouseWheel));
+    SubscribeToEvent(E_RENDERUPDATE, URHO3D_HANDLER(ParticleEditor, HandleRenderUpdate));
 }
 
 ParticleEditor::~ParticleEditor()
@@ -68,10 +70,18 @@ ParticleEditor::~ParticleEditor()
 
 int ParticleEditor::Run()
 {
+    //XClearWindow(QX11Info::display(), QX11Info::appRootWindow());
+    //XSync(QX11Info::display(), false);
+
+
     VariantMap engineParameters;
     engineParameters["FrameLimiter"] = false;
     engineParameters["LogName"] = "ParticleEditor2D.log";
-    engineParameters["ExternalWindow"] = (void*)(mainWindow_->centralWidget()->winId());
+    engineParameters["FullScreen"] = false;
+    engineParameters["WindowWidth"]=800;
+    engineParameters["WindowHeight"]=600;
+
+    //engineParameters["ExternalWindow"] = (void*)(mainWindow_->centralWidget()->winId());
     if (!engine_->Initialize(engineParameters))
         return -1;
 
@@ -86,6 +96,7 @@ int ParticleEditor::Run()
     QTimer timer;
     connect(&timer, SIGNAL(timeout()), this, SLOT(OnTimeout()));
     timer.start(16);
+
 
     return QApplication::exec();
 }
@@ -109,7 +120,7 @@ void ParticleEditor::Open(const String& fileName)
     ParticleEffect2D* particleEffect = cache->GetResource<ParticleEffect2D>(fileName);
     if (!particleEffect)
     {
-        LOGERROR("Open particle effect failed " + fileName);
+        URHO3D_LOGERROR("Open particle effect failed " + fileName);
         return;
     }
 
@@ -131,7 +142,7 @@ void ParticleEditor::Save(const String& fileName)
     File file(context_);
     if (!file.Open(fileName, FILE_WRITE))
     {
-        LOGERROR("Open file failed " + fileName);
+        URHO3D_LOGERROR("Open file failed " + fileName);
         return;
     }
 
