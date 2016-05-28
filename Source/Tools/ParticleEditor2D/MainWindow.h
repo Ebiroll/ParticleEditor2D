@@ -36,6 +36,7 @@ namespace Urho3D
 class EmitterAttributeEditor;
 class ParticleAttributeEditor;
 class ScrollAreaWidget;
+class ParticleEditor;
 
 /// Editor main window class.
 class MainWindow : public QMainWindow, public ParticleEffectEditor
@@ -46,8 +47,8 @@ class MainWindow : public QMainWindow, public ParticleEffectEditor
 
 public:
     /// Construct.
-    MainWindow();
-    
+    MainWindow(ParticleEditor *editor);
+
     /// Create widgets.
     void CreateWidgets();
 

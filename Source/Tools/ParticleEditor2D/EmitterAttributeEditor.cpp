@@ -233,7 +233,7 @@ void EmitterAttributeEditor::HandleUpdateWidget()
     //textureEditor_->setText(sprite ? sprite->GetName().CString() : "");
 
     blendModeEditor_->setCurrentIndex((int)effect_->GetBlendMode());
-    
+
     emitterTypeEditor_->setCurrentIndex((int)effect_->GetEmitterType());
 
     sourcePositionVarianceEditor_->setValue(effect_->GetSourcePositionVariance());
@@ -254,8 +254,8 @@ void EmitterAttributeEditor::CreateMaxParticlesEditor()
 {
     maxParticlesEditor_ = new IntEditor(tr("max_particles"));
     vBoxLayout_->addLayout(maxParticlesEditor_);
-    
-    maxParticlesEditor_->setRange(1, 2048);    
+
+    maxParticlesEditor_->setRange(1, 2048);
     connect(maxParticlesEditor_, SIGNAL(valueChanged(int)), this, SLOT(HandleMaxParticlesEditorValueChanged(int)));
 }
 
@@ -266,7 +266,7 @@ void EmitterAttributeEditor::Createx_angleVarianceEditor()
     x_angleVarianceEditor_->setRange(-3.14f,3.14f);
 
     vBoxLayout_->addWidget(x_angleVarianceEditor_);
-    
+
     //durationEditor_->setRange(-1.0f, 100.0f);
     connect(x_angleVarianceEditor_, SIGNAL(valueChanged(float,float)), this, SLOT(HandleXAngleValueChanged(float,float)));
 }
@@ -325,20 +325,22 @@ void EmitterAttributeEditor::CreateBlendModeEditor()
 
     const char* blendModeNames[] =
     {
-        "replace",
-        "add",
-        "multiply",
-        "alpha",
-        "addalpha",
-        "premulalpha",
-        "invdestalpha",
-        "subtract",
-        "subtractalpha",
+      //   PARTICLE_AFFECTOR_SIZE,
+      //	PARTICLE_AFFECTOR_COLOR,
+      //	PARTICLE_AFFECTOR_ANIMATION,
+      //	PARTICLE_AFFECTOR_FORCE,
+      //	PARTICLE_AFFECTOR_FRICTION,
+
+        "Size",
+        "Color",
+        "animation",
+        "force",
+        "friction",
         0
     };
 
-    //for (unsigned i = 0; i < MAX_BLENDMODES; ++i)
-    //    blendModeEditor_->addItem(blendModeNames[i], i);
+    for (unsigned i = 0; i < 4; ++i)
+        blendModeEditor_->addItem(blendModeNames[i], i);
 
     connect(blendModeEditor_,SIGNAL(currentIndexChanged(int)),this,SLOT(HandleBlendModeEditorChanged(int)));
 }
@@ -360,7 +362,7 @@ void EmitterAttributeEditor::CreateGravityTypeEditor()
 {
     sourcePositionVarianceEditor_ = new Vector2Editor(tr("SourcePositionVariance"));
     vBoxLayout_->addWidget(sourcePositionVarianceEditor_);
-    
+
     //sourcePositionVarianceEditor_->setRange(Vector2::ZERO, Vector2::ONE * 1000.0f);
     connect(sourcePositionVarianceEditor_, SIGNAL(valueChanged(const Vector2&)), this, SLOT(HandleSourcePositionVarianceEditorValueChanged(const Vector2&)));
 
@@ -390,7 +392,7 @@ void EmitterAttributeEditor::ShowGravityTypeEditor(bool visible)
     sourcePositionVarianceEditor_->setVisible(visible);
     speedEditor_->setVisible(visible);
 
-    gravityEditor_->setVisible(visible);    
+    gravityEditor_->setVisible(visible);
     radialAccelerationEditor_->setVisible(visible);
     tangentialAccelerationEditor_->setVisible(visible);
 }
@@ -406,8 +408,8 @@ ValueVarianceEditor* EmitterAttributeEditor::CreateValueVarianceEditor(const QSt
 {
     ValueVarianceEditor* editor = new ValueVarianceEditor(name);
     vBoxLayout_->addWidget(editor);
-    
-    editor->setRange(min, max);    
+
+    editor->setRange(min, max);
     connect(editor, SIGNAL(valueChanged(float, float)), this, SLOT(HandleValueVarianceEditorValueChanged(float, float)));
 
     return editor;

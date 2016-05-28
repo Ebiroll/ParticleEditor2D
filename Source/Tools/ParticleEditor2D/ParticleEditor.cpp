@@ -33,7 +33,7 @@ namespace Urho3D
 
 ParticleEditor::ParticleEditor(int argc, char** argv) :
     QApplication(argc, argv),
-    mainWindow_(new MainWindow())
+    mainWindow_(new MainWindow(this))
 {
 }
 
@@ -75,10 +75,25 @@ void ParticleEditor::Save(const QString& fileName)
     fileName_ = fileName;
 }
 
+void ParticleEditor::setGLWidget(GLWidget* widget)
+{
+  qDebug() << "setGLWidget";
+
+  glWidget_=widget;
+}
 
 
 void ParticleEditor::OnTimeout()
 {
+
+    if (glWidget_!=NULL) {
+        //qDebug() << "Timeout\n";
+        glWidget_->updateFrame();
+    }
+    else
+    {
+        qDebug() << "Null\n";
+    }
     //if (engine_ && !engine_->IsExiting())
     //    engine_->RunFrame();
 }

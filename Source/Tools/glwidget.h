@@ -57,6 +57,8 @@ public:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
     void rotateBy(int xAngle, int yAngle, int zAngle);
+    void updateFrame();
+
     void setClearColor(const QColor &color);
 
 signals:
@@ -81,9 +83,9 @@ private:
     GLuint textures[6];
     QVector<QVector3D> vertices;
     QVector<QVector2D> texCoords;
-#ifdef QT_OPENGL_ES_2
+    GLuint _sb;
+
     QGLShaderProgram *program;
-#endif
 };
 
 #endif

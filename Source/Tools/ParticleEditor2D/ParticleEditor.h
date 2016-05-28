@@ -24,7 +24,7 @@
 //#include "Object.h"
 //#include "Ptr.h"
 #include <QApplication>
-
+#include "glwidget.h";
 namespace Urho3D
 {
 
@@ -63,6 +63,8 @@ public:
     /// Return editor pointer.
     static ParticleEditor* Get();
 
+    void setGLWidget(GLWidget* widget);
+
 private slots:
     // Timeout handler.
     void OnTimeout();
@@ -72,6 +74,8 @@ private:
 
     /// Editor main window.
     MainWindow* mainWindow_;
+
+    GLWidget*  glWidget_;
 };
 
 }

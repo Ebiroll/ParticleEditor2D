@@ -39,9 +39,29 @@
 ****************************************************************************/
 
 #include <QtGui>
+
+#define  GL_GLEXT_PROTOTYPES 1
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <QGLFunctions>
+
 #include <QtOpenGL>
 
+//#include <QOpenGLBuffer>
 #include "glwidget.h"
+#include "rt_particles.h"
+#include <iostream>
+
+uint32_t vis::s_random_seed = 4711;
+
+
+// Stupid OPenGL API :-P
+#ifndef  GL_SHADER_STORAGE_BUFFER
+#define GL_SHADER_STORAGE_BUFFER 0x90D2
+#endif
+#ifndef  GL_STREAM_DRAW
+#define GL_STREAM_DRAW 0x88E0
+#endif
 
 GLWidget::GLWidget(QWidget *parent, QGLWidget *shareWidget)
     : QGLWidget(parent, shareWidget)
@@ -69,6 +89,11 @@ QSize GLWidget::sizeHint() const
     return QSize(200, 200);
 }
 
+void GLWidget::updateFrame()
+{
+    updateGL();
+}
+
 void GLWidget::rotateBy(int xAngle, int yAngle, int zAngle)
 {
     xRot += xAngle;
@@ -87,13 +112,22 @@ void GLWidget::initializeGL()
 {
     makeObject();
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
+    // Set core version??
+    // Inferit from QOpenGLFunctions_4_3_Core
+    //QSurfaceFormat format;
+    //format.setVersion(4, 3);
+    //format.setProfile(QSurfaceFormat::CoreProfile);
+    //setFormat(format);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    //glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_CULL_FACE);
 #ifndef QT_OPENGL_ES_2
     glEnable(GL_TEXTURE_2D);
 #endif
 
-#ifdef QT_OPENGL_ES_2
+//#ifdef QT_OPENGL_ES_2
 
 #define PROGRAM_VERTEX_ATTRIBUTE 0
 #define PROGRAM_TEXCOORD_ATTRIBUTE 1
@@ -104,9 +138,22 @@ void GLWidget::initializeGL()
         "attribute mediump vec4 texCoord;\n"
         "varying mediump vec4 texc;\n"
         "uniform mediump mat4 matrix;\n"
+        "    struct Particle\n"
+        "    {\n"
+        "        vec3 pos;\n"
+        "        float rot;\n"
+        "        float size;\n"
+        "        float anim;\n"
+        "        uint color;\n"
+        "    };\n"
+        "    layout(std430, binding = 0) buffer P_data\n"
+        "    {\n"
+        "        Particle p_data[];\n"
+        "    };\n"
         "void main(void)\n"
         "{\n"
         "    gl_Position = matrix * vertex;\n"
+        "    gl_Position.xyz += p_data[gl_InstanceID].pos.xyz;\n"
         "    texc = texCoord;\n"
         "}\n";
     vshader->compileSourceCode(vsrc);
@@ -117,6 +164,7 @@ void GLWidget::initializeGL()
         "varying mediump vec4 texc;\n"
         "void main(void)\n"
         "{\n"
+        "    //gl_FragColor = vec4(0.0,1.0,0.0,1.0);\n"
         "    gl_FragColor = texture2D(texture, texc.st);\n"
         "}\n";
     fshader->compileSourceCode(fsrc);
@@ -126,21 +174,50 @@ void GLWidget::initializeGL()
     program->addShader(fshader);
     program->bindAttributeLocation("vertex", PROGRAM_VERTEX_ATTRIBUTE);
     program->bindAttributeLocation("texCoord", PROGRAM_TEXCOORD_ATTRIBUTE);
+
+    std::cerr << "Create streambuffer\n";
+
+    glGenBuffers(1, &_sb);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, _sb);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(vis::RT_particles::VS_particle) * 1000, 0, GL_STATIC_DRAW);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    //glCreateBuffers(1, &_sb);
+    //glNamedBufferData(_sb, sizeof(VS_particle) * 1000, 0, GL_STREAM_DRAW);
+
+
     program->link();
 
     program->bind();
     program->setUniformValue("texture", 0);
 
-#endif
+
+
+
+
+
+//#endif
 }
+
+inline uint32_t pack_color(const float c[4])
+{
+    uint32_t r = uint32_t(c[0] * 255.0f);
+    uint32_t g = uint32_t(c[1] * 255.0f) << 8;
+    uint32_t b = uint32_t(c[2] * 255.0f) << 16;
+    uint32_t a = uint32_t(c[3] * 255.0f) << 24;
+    return r | g | b | a;
+}
+
+vis::RT_particles::VS_particle vs_particles[1000];
+
 
 void GLWidget::paintGL()
 {
     qglClearColor(clearColor);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-#if !defined(QT_OPENGL_ES_2)
-
+//#if !defined(QT_OPENGL_ES_2)
+#if 0
     glLoadIdentity();
     glTranslatef(0.0f, 0.0f, -10.0f);
     glRotatef(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
@@ -171,10 +248,38 @@ void GLWidget::paintGL()
 
 #endif
 
-    for (int i = 0; i < 6; ++i) {
-        glBindTexture(GL_TEXTURE_2D, textures[i]);
-        glDrawArrays(GL_TRIANGLE_FAN, i * 4, 4);
+    int n_particles=10;
+    float c[4]={1.0f,0.0f,0.0f,1.0f};
+    for (uint32_t i = 0; i < n_particles; ++i) {
+        vis::RT_particles::VS_particle& vp = vs_particles[i];
+        vp.pos[0] = vp.pos[0] +  0.001*i*(vis::rand_f() -0.5f) ;
+        vp.pos[1] = vp.pos[1] +  0.001*i*(vis::rand_f() - 0.5f);
+        vp.pos[2] =  0.0f;
+        vp.rot = 0.0f;
+        vp.size = 2.0f;
+        vp.anim = 0;
+        vp.color = pack_color(c);
     }
+
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, _sb);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(vis::RT_particles::VS_particle)* n_particles, &vs_particles[0]);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, _sb);
+
+
+    // One side only
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    //glDrawArrays(GL_TRIANGLE_FAN, 0 * 4, 4);
+
+    // Draw all active particles
+    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, n_particles);
+
+    //for (int i = 0; i < 6; ++i) {
+    //    glBindTexture(GL_TEXTURE_2D, textures[i]);
+    //    glDrawArrays(GL_TRIANGLE_FAN, i * 4, 4);
+    //}
 }
 
 void GLWidget::resizeGL(int width, int height)

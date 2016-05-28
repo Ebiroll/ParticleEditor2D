@@ -21,26 +21,15 @@
 #
 
 # Set project name
-project (Urho3D-Tools)
+project (si-ParticleEditor)
 
 # Find Urho3D library
-find_package (Urho3D REQUIRED)
-include_directories (${URHO3D_INCLUDE_DIRS})
+#find_package (Urho3D REQUIRED)
+#include_directories (${URHO3D_INCLUDE_DIRS})
 
 # Urho3DPlayer application
-add_subdirectory (Urho3DPlayer)
+#add_subdirectory (Urho3DPlayer)
 
 # ParticleEditor application
 add_subdirectory (ParticleEditor2D)
 
-# Do not build tools for iOS and Android regardless of the URHO3D_TOOLS build option
-if (NOT IOS AND NOT ANDROID AND URHO3D_TOOLS)
-    # Urho3D tools
-    add_subdirectory (AssetImporter)
-    add_subdirectory (OgreImporter)
-    add_subdirectory (PackageTool)
-    add_subdirectory (RampGenerator)
-    if (URHO3D_ANGELSCRIPT)
-        add_subdirectory (ScriptCompiler)
-    endif ()
-endif ()

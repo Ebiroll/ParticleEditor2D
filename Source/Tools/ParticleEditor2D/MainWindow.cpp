@@ -40,7 +40,7 @@
 namespace Urho3D
 {
 
-MainWindow::MainWindow() :
+MainWindow::MainWindow(ParticleEditor *editor) :
     QMainWindow(0, 0),
     ParticleEffectEditor(),
     emitterAttributeEditor_(0),
@@ -53,6 +53,8 @@ MainWindow::MainWindow() :
 
     //QWidget* widget = new QGLWidget();
     GLWidget* widget = new GLWidget(0,0);
+
+    editor->setGLWidget(widget);
     setCentralWidget(widget);
 
     widget->setMinimumSize(400, 400);
@@ -242,6 +244,7 @@ void MainWindow::HandleZoomAction()
 
 void MainWindow::HandleBackgroundAction()
 {
+
 #if 0
     Renderer* renderer = GetSubsystem<Renderer>();
     const Color& color = renderer->GetDefaultZone()->GetFogColor();
