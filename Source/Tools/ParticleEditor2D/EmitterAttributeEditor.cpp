@@ -51,7 +51,9 @@ EmitterAttributeEditor::EmitterAttributeEditor() :
 {
     CreateMaxParticlesEditor();
     Createx_angleVarianceEditor();
-    
+    Createy_angleVarianceEditor();
+    Create_Speed_VarianceEditor();
+
     vBoxLayout_->addSpacing(8);
 
     CreateTextureEditor();
@@ -92,6 +94,23 @@ void EmitterAttributeEditor::HandleXAngleValueChanged(float value,float spread)
 
     //GetEffect()->SetDuration(value);
 }
+
+void EmitterAttributeEditor::HandleYAngleValueChanged(float value,float spread)
+{
+    if (updatingWidget_)
+        return;
+
+    //GetEffect()->SetDuration(value);
+}
+
+void EmitterAttributeEditor::HandleSpeedValueChanged(float value,float spread)
+{
+    if (updatingWidget_)
+        return;
+
+    //GetEffect()->SetDuration(value);
+}
+
 
 void EmitterAttributeEditor::HandleTexturePushButtonClicked()
 {
@@ -251,6 +270,32 @@ void EmitterAttributeEditor::Createx_angleVarianceEditor()
     //durationEditor_->setRange(-1.0f, 100.0f);
     connect(x_angleVarianceEditor_, SIGNAL(valueChanged(float,float)), this, SLOT(HandleXAngleValueChanged(float,float)));
 }
+
+void EmitterAttributeEditor::Createy_angleVarianceEditor()
+{
+    y_angleVarianceEditor_=new ValueVarianceEditor(tr("y_angle"));
+    y_angleVarianceEditor_->setValue(0.0f,3.14f);
+    y_angleVarianceEditor_->setRange(-3.14f,3.14f);
+
+    vBoxLayout_->addWidget(y_angleVarianceEditor_);
+
+    //durationEditor_->setRange(-1.0f, 100.0f);
+    connect(y_angleVarianceEditor_, SIGNAL(valueChanged(float,float)), this, SLOT(HandleYAngleValueChanged(float,float)));
+}
+
+void EmitterAttributeEditor::Create_Speed_VarianceEditor()
+{
+    speed_VarianceEditor_=new ValueVarianceEditor(tr("speed"));
+    speed_VarianceEditor_->setValue(0.0f,0.4f);
+    speed_VarianceEditor_->setRange(0.0f,100.0f);
+
+    vBoxLayout_->addWidget(speed_VarianceEditor_);
+
+    //durationEditor_->setRange(-1.0f, 100.0f);
+    connect(speed_VarianceEditor_, SIGNAL(valueChanged(float,float)), this, SLOT(HandleSpeedValueChanged(float,float)));
+
+}
+
 
 void EmitterAttributeEditor::CreateTextureEditor()
 {

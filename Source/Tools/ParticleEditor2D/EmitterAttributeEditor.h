@@ -52,6 +52,8 @@ public:
 private slots:
     void HandleMaxParticlesEditorValueChanged(int value);
     void HandleXAngleValueChanged(float value,float spread);
+    void HandleYAngleValueChanged(float value,float spread);
+    void HandleSpeedValueChanged(float value,float spread);
 
     void HandleTexturePushButtonClicked();
     void HandleBlendModeEditorChanged(int index);
@@ -67,6 +69,9 @@ private:
 
     void CreateMaxParticlesEditor();
     void Createx_angleVarianceEditor();
+    void Createy_angleVarianceEditor();
+    void Create_Speed_VarianceEditor();
+
     void CreateTextureEditor();
     void CreateBlendModeEditor();
 
@@ -86,11 +91,12 @@ private:
 
    ValueVarianceEditor* x_angleVarianceEditor_;
 
+   ValueVarianceEditor* y_angleVarianceEditor_;
+
+   ValueVarianceEditor* speed_VarianceEditor_;
+
+
 #if 0
-    x_angle = f0.0
-    x_angle_spread = f3.14
-    y_angle = f0.0
-    y_angle_spread = f3.14
     speed = f0.0
     speed_spread = f0.4
     rotation = f0.0
