@@ -27,6 +27,7 @@
 #include "MainWindow.h"
 #include <X11/Xlib.h>
 #include <Qt/qx11info_x11.h>
+
 namespace Urho3D
 {
 
@@ -44,7 +45,7 @@ ParticleEditor::~ParticleEditor()
 int ParticleEditor::Run()
 {
     mainWindow_->CreateWidgets();
-    
+
     //New();
 
     QTimer timer;

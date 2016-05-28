@@ -33,7 +33,8 @@ SOURCES +=  ParticleEditor2D/ColorVarianceEditor.cpp \
    ParticleEditor2D/Vector2Editor.cpp \
     particle_fx_manager.cpp \
     rt_particles.cpp \
-    rt_gl.cpp
+    rt_gl.cpp \
+    glwidget.cpp
 
 
 HEADERS += ParticleEditor2D/ColorVarianceEditor.h \
@@ -46,16 +47,18 @@ ParticleEditor2D/ParticleEditor.h \
 ParticleEditor2D/ParticleEffectEditor.h \
 ParticleEditor2D/ScrollAreaWidget.h \
 ParticleEditor2D/ValueVarianceEditor.h \
-ParticleEditor2D/Vector2Editor.h \ 
+ParticleEditor2D/Vector2Editor.h \
     particle_fx.h \
     particle_fx_manager.h \
-    rt_core.h
+    rt_core.h \
+    glwidget.h
 
 
 RESOURCES     = ParticleEditor2D/Resources.qrc
 
 RESOURCES     += ParticleEditor2D/style.qrc
 
+RESOURCES     += textures.qrc
 
 !win32 {
 #SOURCES += ../engine/src/engine/sysglx.cpp

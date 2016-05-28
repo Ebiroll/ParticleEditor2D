@@ -31,6 +31,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QToolBar>
+#include "glwidget.h"
 
 //#include <QtGui/QWindow>
 //#include <QtGui/QOpenGLFunctions>
@@ -51,12 +52,12 @@ MainWindow::MainWindow() :
     //setSurfaceType(QWindow::OpenGLSurface);
 
     //QWidget* widget = new QGLWidget();
-    QWidget* widget = new QWidget();
+    GLWidget* widget = new GLWidget(0,0);
     setCentralWidget(widget);
-    
-    widget->setMinimumSize(128, 128);
-    widget->setUpdatesEnabled(false);
-    widget->setFocusPolicy(Qt::StrongFocus);
+
+    widget->setMinimumSize(400, 400);
+    //widget->setUpdatesEnabled(false);
+    //widget->setFocusPolicy(Qt::StrongFocus);
 }
 
 void MainWindow::CreateWidgets()
@@ -134,7 +135,7 @@ void MainWindow::CreateMenuBar()
     fileMenu_->addAction(saveAsAction_);
 
     fileMenu_->addSeparator();
-    
+
     fileMenu_->addAction(exitAction_);
 
     viewMenu_ = menuBar()->addMenu(tr("&View"));
@@ -142,7 +143,7 @@ void MainWindow::CreateMenuBar()
     viewMenu_->addAction(zoomInAction_);
     viewMenu_->addAction(zoomOutAction_);
     viewMenu_->addAction(zoomResetAction_);
-    
+
     viewMenu_->addSeparator();
 
     viewMenu_->addAction(backgroundAction_);
@@ -173,7 +174,7 @@ void MainWindow::CreateDockWidgets()
     eaDockWidget->setWidget(emitterAttributeEditor_);
 
     viewMenu_->addSeparator();
-    
+
     QAction* eaToggleViewAction = eaDockWidget->toggleViewAction();
     viewMenu_->addAction(eaToggleViewAction);
     eaToggleViewAction->setShortcut(QKeySequence::fromString("Ctrl+E"));
@@ -228,7 +229,7 @@ void MainWindow::HandleZoomAction()
 {
 #if 0
     Camera* camera = ParticleEditor::Get()->GetCamera();
-    
+
     QObject* s = sender();
     if (s == zoomInAction_)
         camera->SetZoom(camera->GetZoom() * 1.25f);
@@ -244,10 +245,10 @@ void MainWindow::HandleBackgroundAction()
 #if 0
     Renderer* renderer = GetSubsystem<Renderer>();
     const Color& color = renderer->GetDefaultZone()->GetFogColor();
-    
+
     QColor qColor = QColor::fromRgbF(color.r_, color.g_, color.b_);
     QColor newQcolor = QColorDialog::getColor(qColor, this);
-    
+
     Color newColor(newQcolor.redF(), newQcolor.greenF(), newQcolor.blueF());
     renderer->GetDefaultZone()->SetFogColor(newColor);
 #endif

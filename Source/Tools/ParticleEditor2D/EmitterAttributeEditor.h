@@ -57,7 +57,7 @@ private slots:
 
     void HandleTexturePushButtonClicked();
     void HandleBlendModeEditorChanged(int index);
-    
+
     void HandleEmitterTypeEditorChanged(int index);
     //void HandleSourcePositionVarianceEditorValueChanged(const Vector2& value);
     //void HandleGravityEditorValueChanged(const Vector2& value);
@@ -97,8 +97,6 @@ private:
 
 
 #if 0
-    speed = f0.0
-    speed_spread = f0.4
     rotation = f0.0
     rotation_spread = f3.14
     rotation_speed = f0.0

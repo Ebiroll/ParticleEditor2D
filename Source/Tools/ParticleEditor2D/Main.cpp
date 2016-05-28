@@ -27,6 +27,9 @@ int Main()
 {
     int argc = 0;
     char** argv = 0;
+
+    Q_INIT_RESOURCE(textures);
+
     //Urho3D::SharedPtr<Urho3D::Context> context(new Urho3D::Context());
     Urho3D::ParticleEditor editor(argc, argv);
 
