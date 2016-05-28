@@ -13,6 +13,8 @@
 #include "engine/texture.h"
 #endif
 
+#include "rt_core.h"
+
 #include <memory>
 
 namespace vis
@@ -137,14 +139,14 @@ namespace vis
 		};
 
 		Particle_fx(std::shared_ptr<Particle_fx_resource>& res);
-		~Particle_fx() = default;
+        ~Particle_fx();
 
 		uint32_t num_emitters;
 		std::unique_ptr<Emitter[]> emitters;
 		std::unique_ptr<Particle[]> particles;
 		std::unique_ptr<Particle_affector[]> affectors;
 		
-        //Render_data _rdata;
+        Render_data _rdata;
 		std::shared_ptr<Particle_fx_resource> resource;
 
 		void update(float dt);

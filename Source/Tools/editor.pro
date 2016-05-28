@@ -30,7 +30,10 @@ SOURCES +=  ParticleEditor2D/ColorVarianceEditor.cpp \
    ParticleEditor2D/ParticleEffectEditor.cpp \
    ParticleEditor2D/ScrollAreaWidget.cpp \
    ParticleEditor2D/ValueVarianceEditor.cpp \
-   ParticleEditor2D/Vector2Editor.cpp
+   ParticleEditor2D/Vector2Editor.cpp \
+    particle_fx_manager.cpp \
+    rt_particles.cpp \
+    rt_gl.cpp
 
 
 HEADERS += ParticleEditor2D/ColorVarianceEditor.h \
@@ -44,7 +47,9 @@ ParticleEditor2D/ParticleEffectEditor.h \
 ParticleEditor2D/ScrollAreaWidget.h \
 ParticleEditor2D/ValueVarianceEditor.h \
 ParticleEditor2D/Vector2Editor.h \ 
-    particle_fx.h
+    particle_fx.h \
+    particle_fx_manager.h \
+    rt_core.h
 
 !win32 {
 #SOURCES += ../engine/src/engine/sysglx.cpp
@@ -87,18 +92,14 @@ QMAKE_CXXFLAGS += -m32 -msse
 LIBS += -L/usr/lib64 -lGL
 LIBS += -L/usr/lib64 -lGLU -lX11 -lm -lpthread
 LIBS += -L/usr/lib64 -lXmu
-LIBS += /home/olas/work/si_vis/glew/lib/libGLEW.a
-LIBS += /home/olas/work/si_vis/glfw/build/src/libglfw3.a
 LIBS += -lX11
-LIBS += -lXext -lXinerama -lXi -lXcursor -lXrandr
-LIBS += -lassimp
 LIBS += -static-libstdc++
 }
 
-TARGET = si_viewer
+TARGET = si_editor
 CONFIG += qt
 QT += network
-#QT += opengl
+QT += opengl
 
 QMAKE_CXXFLAGS += -fpermissive -std=c++0x
 # -std=c++11
