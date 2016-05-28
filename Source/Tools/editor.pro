@@ -51,6 +51,12 @@ ParticleEditor2D/Vector2Editor.h \
     particle_fx_manager.h \
     rt_core.h
 
+
+RESOURCES     = ParticleEditor2D/Resources.qrc
+
+RESOURCES     += ParticleEditor2D/style.qrc
+
+
 !win32 {
 #SOURCES += ../engine/src/engine/sysglx.cpp
 }
