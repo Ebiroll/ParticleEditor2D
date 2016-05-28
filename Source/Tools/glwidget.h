@@ -83,6 +83,7 @@ private:
     GLuint textures[6];
     QVector<QVector3D> vertices;
     QVector<QVector2D> texCoords;
+    QVector<QVector2D> animParams;
     GLuint _sb;
 
     QGLShaderProgram *program;

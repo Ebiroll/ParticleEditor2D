@@ -131,13 +131,16 @@ void GLWidget::initializeGL()
 
 #define PROGRAM_VERTEX_ATTRIBUTE 0
 #define PROGRAM_TEXCOORD_ATTRIBUTE 1
+#define PROGRAM_ANIM_ATTRIBUTE 2
 
     QGLShader *vshader = new QGLShader(QGLShader::Vertex, this);
     const char *vsrc =
         "attribute highp vec4 vertex;\n"
         "attribute mediump vec4 texCoord;\n"
+        "attribute mediump vec2 animFraction;\n"
         "varying mediump vec4 texc;\n"
         "uniform mediump mat4 matrix;\n"
+        "mediump vec2 vca[4];\n"
         "    struct Particle\n"
         "    {\n"
         "        vec3 pos;\n"
@@ -152,9 +155,20 @@ void GLWidget::initializeGL()
         "    };\n"
         "void main(void)\n"
         "{\n"
+            "vca[0] = vec2(0.0, 0.0);\n"
+            "vca[1] = vec2(0.0, 1.0);\n"
+            "vca[2] = vec2(1.0, 1.0);\n"
+            "vca[3] = vec2(1.0, 0.0);\n"
+        #if 0
+        #endif
         "    gl_Position = matrix * vertex;\n"
         "    gl_Position.xyz += p_data[gl_InstanceID].pos.xyz;\n"
-        "    texc = texCoord;\n"
+        "    float anim = floor(p_data[gl_InstanceID].anim + 0.5) * animFraction.x;\n"
+        "    vec2 uv_anim;\n"
+        "	 uv_anim.x = fract(anim);\n"
+        "    uv_anim.y = animFraction.y * (anim - uv_anim.x);\n"
+        "	 texc = vec4(uv_anim + vca[gl_VertexID%4] * animFraction,0.0,0.0);\n"
+        "    //texc = texCoord;\n"
         "}\n";
     vshader->compileSourceCode(vsrc);
 
@@ -174,6 +188,11 @@ void GLWidget::initializeGL()
     program->addShader(fshader);
     program->bindAttributeLocation("vertex", PROGRAM_VERTEX_ATTRIBUTE);
     program->bindAttributeLocation("texCoord", PROGRAM_TEXCOORD_ATTRIBUTE);
+    program->bindAttributeLocation("animFraction", PROGRAM_ANIM_ATTRIBUTE);
+
+
+
+
 
     std::cerr << "Create streambuffer\n";
 
@@ -181,6 +200,8 @@ void GLWidget::initializeGL()
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, _sb);
     glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(vis::RT_particles::VS_particle) * 1000, 0, GL_STATIC_DRAW);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+
+
 
     //glCreateBuffers(1, &_sb);
     //glNamedBufferData(_sb, sizeof(VS_particle) * 1000, 0, GL_STREAM_DRAW);
@@ -209,6 +230,7 @@ inline uint32_t pack_color(const float c[4])
 }
 
 vis::RT_particles::VS_particle vs_particles[1000];
+int n_particles=100;
 
 
 void GLWidget::paintGL()
@@ -241,23 +263,38 @@ void GLWidget::paintGL()
     program->setUniformValue("matrix", m);
     program->enableAttributeArray(PROGRAM_VERTEX_ATTRIBUTE);
     program->enableAttributeArray(PROGRAM_TEXCOORD_ATTRIBUTE);
+    program->enableAttributeArray(PROGRAM_ANIM_ATTRIBUTE);
+
     program->setAttributeArray
         (PROGRAM_VERTEX_ATTRIBUTE, vertices.constData());
     program->setAttributeArray
         (PROGRAM_TEXCOORD_ATTRIBUTE, texCoords.constData());
 
+    float anim_params[2] = { 1.0f / 8.0f, 1.0f / 8.0f};
+    animParams.append(QVector2D(anim_params[0],anim_params[0]));
+    program->setAttributeArray(PROGRAM_ANIM_ATTRIBUTE, animParams.constData());
+
+    //glProgramUniform2fv(_vs_prog, _u_anim_params, 1, &anim_params[0]);
+
+
 #endif
 
-    int n_particles=10;
+    n_particles=n_particles+1;
+    if (n_particles>999) {
+       n_particles=999;
+    }
     float c[4]={1.0f,0.0f,0.0f,1.0f};
     for (uint32_t i = 0; i < n_particles; ++i) {
         vis::RT_particles::VS_particle& vp = vs_particles[i];
-        vp.pos[0] = vp.pos[0] +  0.001*i*(vis::rand_f() -0.5f) ;
-        vp.pos[1] = vp.pos[1] +  0.001*i*(vis::rand_f() - 0.5f);
+        vp.pos[0] = vp.pos[0] +  0.01*(vis::rand_f() -0.5f) ;
+        vp.pos[1] = vp.pos[1] +  0.01*(vis::rand_f() - 0.5f);
         vp.pos[2] =  0.0f;
         vp.rot = 0.0f;
-        vp.size = 2.0f;
-        vp.anim = 0;
+        vp.size = 20.0f;
+        vp.anim = vp.anim+1.0;
+        if (vp.anim>50) {
+            vp.anim=0.0;
+        }
         vp.color = pack_color(c);
     }
 
