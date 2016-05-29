@@ -202,7 +202,7 @@ void MainWindow::HandleOpenAction()
 //    ileName = QFileDialog::getOpenFileName(this,
 //        tr("Open Image"), "/home/jana", tr("Image Files (*.png *.jpg *.bmp)"));
 
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open particle"), "Data/Urho2D/", tr("Pex files *.pex"));
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Open particle effect file"), "", tr("Pfx files *.pfx"));
     if (fileName.isEmpty())
         return;
 
@@ -220,7 +220,7 @@ void MainWindow::HandleSaveAction()
 
 void MainWindow::HandleSaveAsAction()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Save particle"), "Data/Urho2D/", tr("*.pex"));
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Save particle effect"), "", tr("*.pfx"));
     if (fileName.isEmpty())
         return;
 

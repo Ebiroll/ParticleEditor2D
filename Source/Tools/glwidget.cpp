@@ -86,7 +86,7 @@ QSize GLWidget::minimumSizeHint() const
 
 QSize GLWidget::sizeHint() const
 {
-    return QSize(200, 200);
+    return QSize(300, 300);
 }
 
 void GLWidget::updateFrame()
@@ -141,6 +141,12 @@ void GLWidget::initializeGL()
         "varying mediump vec4 texc;\n"
         "uniform mediump mat4 matrix;\n"
         "mediump vec2 vca[4];\n"
+         "   vec2 rotate(vec2 p, float a)\n"
+         "   {\n"
+         "       float s = sin(a);\n"
+         "       float c = cos(a);\n"
+         "       return vec2(p.x * c - p.y * s, p.x * s + p.y * c);\n"
+         "   }\n"
         "    struct Particle\n"
         "    {\n"
         "        vec3 pos;\n"
@@ -155,13 +161,16 @@ void GLWidget::initializeGL()
         "    };\n"
         "void main(void)\n"
         "{\n"
-            "vca[0] = vec2(0.0, 0.0);\n"
-            "vca[1] = vec2(0.0, 1.0);\n"
-            "vca[2] = vec2(1.0, 1.0);\n"
-            "vca[3] = vec2(1.0, 0.0);\n"
-        #if 0
-        #endif
+        "    vca[0] = vec2(0.0, 0.0);\n"
+        "    vca[1] = vec2(0.0, 1.0);\n"
+        "    vca[2] = vec2(1.0, 1.0);\n"
+        "    vca[3] = vec2(1.0, 0.0);\n"
+        "    vec2 pos = (2.0 * vca[gl_VertexID%4] - 1.0) * p_data[gl_InstanceID].size;"
+        "	 pos = rotate(vertex, p_data[gl_InstanceID].rot);"
+        "	 gl_Position = matrix  * vec4(pos.xy, 0.0, 1.0);"
+#if 0
         "    gl_Position = matrix * vertex;\n"
+#endif
         "    gl_Position.xyz += p_data[gl_InstanceID].pos.xyz;\n"
         "    float anim = floor(p_data[gl_InstanceID].anim + 0.5) * animFraction.x;\n"
         "    vec2 uv_anim;\n"
@@ -230,7 +239,7 @@ inline uint32_t pack_color(const float c[4])
 }
 
 vis::RT_particles::VS_particle vs_particles[1000];
-int n_particles=100;
+int n_particles=1;
 
 
 void GLWidget::paintGL()
@@ -287,17 +296,16 @@ void GLWidget::paintGL()
     for (uint32_t i = 0; i < n_particles; ++i) {
         vis::RT_particles::VS_particle& vp = vs_particles[i];
         vp.pos[0] = vp.pos[0] +  0.01*(vis::rand_f() -0.5f) ;
-        vp.pos[1] = vp.pos[1] +  0.01*(vis::rand_f() - 0.5f);
+        vp.pos[1] = vp.pos[1] +  0.01*(vis::rand_f() - 0.45f);
         vp.pos[2] =  0.0f;
-        vp.rot = 0.0f;
-        vp.size = 20.0f;
+        vp.rot =  vp.rot  + 0.01f;
+        vp.size = 0.1f;
         vp.anim = vp.anim+1.0;
         if (vp.anim>50) {
             vp.anim=0.0;
         }
         vp.color = pack_color(c);
     }
-
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, _sb);
     glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(vis::RT_particles::VS_particle)* n_particles, &vs_particles[0]);

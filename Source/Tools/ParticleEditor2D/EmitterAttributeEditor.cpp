@@ -255,7 +255,7 @@ void EmitterAttributeEditor::CreateMaxParticlesEditor()
     maxParticlesEditor_ = new IntEditor(tr("max_particles"));
     vBoxLayout_->addLayout(maxParticlesEditor_);
 
-    maxParticlesEditor_->setRange(1, 2048);
+    maxParticlesEditor_->setRange(1, 1000);
     connect(maxParticlesEditor_, SIGNAL(valueChanged(int)), this, SLOT(HandleMaxParticlesEditorValueChanged(int)));
 }
 
@@ -318,7 +318,7 @@ void EmitterAttributeEditor::CreateBlendModeEditor()
 {
     QHBoxLayout* hBoxLayout = AddHBoxLayout();
 
-    hBoxLayout->addWidget(new QLabel(tr("Blend Mode")));
+    hBoxLayout->addWidget(new QLabel(tr("Affector Type")));
 
     blendModeEditor_ = new QComboBox();
     hBoxLayout->addWidget(blendModeEditor_, 1);
