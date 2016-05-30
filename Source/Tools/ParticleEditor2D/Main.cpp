@@ -23,11 +23,10 @@
 //#include "Application.h"
 #include "ParticleEditor.h"
 #include <QFile>
-int Main()
-{
-    int argc = 0;
-    char** argv = 0;
 
+//URHO3D_DEFINE_MAIN(Main());
+int main(int argc, char* argv[])
+{
     Q_INIT_RESOURCE(textures);
 
     //Urho3D::SharedPtr<Urho3D::Context> context(new Urho3D::Context());
@@ -38,11 +37,4 @@ int Main()
         editor.setStyleSheet(QLatin1String(file.readAll()));
 
     return editor.Run();
-}
-
-//URHO3D_DEFINE_MAIN(Main());
-int main(int argc, char** argv)
-{
-    //Urho3D::ParseArguments(argc, argv);
-    return Main();
 }

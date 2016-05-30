@@ -57,7 +57,7 @@ MainWindow::MainWindow(ParticleEditor *editor) :
     editor->setGLWidget(widget);
     setCentralWidget(widget);
 
-    widget->setMinimumSize(400, 400);
+    widget->setMinimumSize(300, 300);
     //widget->setUpdatesEnabled(false);
     //widget->setFocusPolicy(Qt::StrongFocus);
 }

@@ -86,7 +86,7 @@ QSize GLWidget::minimumSizeHint() const
 
 QSize GLWidget::sizeHint() const
 {
-    return QSize(300, 300);
+    return QSize(200, 200);
 }
 
 void GLWidget::updateFrame()
@@ -135,6 +135,7 @@ void GLWidget::initializeGL()
 
     QGLShader *vshader = new QGLShader(QGLShader::Vertex, this);
     const char *vsrc =
+        "#version 440\n"
         "attribute highp vec4 vertex;\n"
         "attribute mediump vec4 texCoord;\n"
         "attribute mediump vec2 animFraction;\n"
@@ -166,7 +167,7 @@ void GLWidget::initializeGL()
         "    vca[2] = vec2(1.0, 1.0);\n"
         "    vca[3] = vec2(1.0, 0.0);\n"
         "    vec2 pos = (2.0 * vca[gl_VertexID%4] - 1.0) * p_data[gl_InstanceID].size;"
-        "	 pos = rotate(vertex, p_data[gl_InstanceID].rot);"
+        "	 pos = rotate(vec2(vertex), p_data[gl_InstanceID].rot);"
         "	 gl_Position = matrix  * vec4(pos.xy, 0.0, 1.0);"
 #if 0
         "    gl_Position = matrix * vertex;\n"

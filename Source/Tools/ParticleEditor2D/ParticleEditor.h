@@ -24,7 +24,7 @@
 //#include "Object.h"
 //#include "Ptr.h"
 #include <QApplication>
-#include "glwidget.h";
+#include "glwidget.h"
 namespace Urho3D
 {
 
@@ -47,7 +47,7 @@ private:
     QString fileName_;
 public:
     /// Construct.
-    ParticleEditor(int argc, char** argv);
+    ParticleEditor(int argc, char* argv[]);
     /// Destruct.
     virtual ~ParticleEditor();
 

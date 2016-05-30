@@ -31,7 +31,7 @@
 namespace Urho3D
 {
 
-ParticleEditor::ParticleEditor(int argc, char** argv) :
+ParticleEditor::ParticleEditor(int argc, char* argv[]) :
     QApplication(argc, argv),
     mainWindow_(new MainWindow(this))
 {

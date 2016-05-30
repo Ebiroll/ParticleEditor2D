@@ -1,10 +1,11 @@
 DEFINES += "LINUX"
 DEFINES += "VSG_USE_NATIVE_STL"
 OSFLAG=linux
-CONFIG += release
+#CONFIG += release
+CONFIG += debug
 
-QMAKE_CXXFLAGS_RELEASE -= -O2
-QMAKE_CXXFLAGS_RELEASE += -Os
+#QMAKE_CXXFLAGS_RELEASE -= -O2
+#QMAKE_CXXFLAGS_RELEASE += -Os
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -102,7 +103,7 @@ LIBS += -L/usr/lib64 -lGL
 LIBS += -L/usr/lib64 -lGLU -lX11 -lm -lpthread
 LIBS += -L/usr/lib64 -lXmu
 LIBS += -lX11
-LIBS += -static-libstdc++
+#LIBS += -static-libstdc++
 }
 
 TARGET = si_editor
@@ -110,10 +111,10 @@ CONFIG += qt
 QT += network
 QT += opengl
 
-QMAKE_CXXFLAGS += -fpermissive -std=c++0x
-# -std=c++11
+#QMAKE_CXXFLAGS += -fpermissive -std=c++0x
+QMAKE_CXXFLAGS += -std=c++11
 #QMAKE_CXXFLAGS += -Wall
-QMAKE_CXXFLAGS += -Wno-long-long
+#QMAKE_CXXFLAGS += -Wno-long-long
 
 #DESTDIR = ./release
 OBJECTS_DIR = ./build/.obj
