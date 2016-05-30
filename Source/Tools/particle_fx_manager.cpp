@@ -1,10 +1,10 @@
 
 #if 0
-#include "core/vsd_util.h"
 #include "engine/engine.h"
 #include "engine/rt_particles.h"
 #endif
 
+#include "vsd_util.h"
 #include "particle_fx.h"
 #include "particle_fx_manager.h"
 #include "rt_particles.h"
@@ -79,7 +79,6 @@ namespace vis
 				return std::lower_bound(_resource_table.begin(), _resource_table.end(), hash, lb);
 			}
 
-#if 0
             std::shared_ptr<Particle_fx_resource> create_pfx_resource(const Hash_key& id, uint8_t *data, uint32_t data_size)
             {
 				auto it = find_pfx(id);
@@ -103,19 +102,6 @@ namespace vis
 
 				return new_pfx;
 			}
-			std::shared_ptr<Particle_fx_resource> load_pfx_resource(const char* file)
-			{
-				FILE *fp = fopen(file, "rb");
-				fseek(fp, 0, SEEK_END);
-				uint32_t size = ftell(fp);
-				fseek(fp, 0, SEEK_SET);
-				std::vector<uint8_t> data;
-				data.resize(size + 1);
-				fread(&data[0], size, 1, fp);
-				fclose(fp);
-				data.back() = 0;
-                //return create_pfx_resource(file, &data[0], data.size());
-			}
 
 			Particle_fx* create_pfx(const Hash_key& id, const Matrix44_f& tm)
 			{
@@ -134,10 +120,27 @@ namespace vis
 			{
 
 			}
-#endif
         };
 
-		static Context context;
+        static Context context;
+
+
+        std::shared_ptr<Particle_fx_resource> load_pfx_resource(const char* file)
+        {
+            FILE *fp = fopen(file, "rb");
+            fseek(fp, 0, SEEK_END);
+            uint32_t size = ftell(fp);
+            fseek(fp, 0, SEEK_SET);
+            std::vector<uint8_t> data;
+            data.resize(size + 1);
+            fread(&data[0], size, 1, fp);
+            fclose(fp);
+            data.back() = 0;
+            return context.create_pfx_resource(file, &data[0], data.size());
+        }
+
+
+
 
 		inline float rand_range(float min, float max)
 		{
@@ -148,7 +151,6 @@ namespace vis
 		{
             //return rand_range(-spread, spread);
 		}
-#if 0
     Particle_fx_resource::Particle_fx_resource()
 	{
 		total_particles = 0;
@@ -204,7 +206,7 @@ namespace vis
 		e.emitter_size[2] = emitter_size[2];
 
 		e.max_particles = (int)vc.value("max_particles");
-		e.texture = engine::texture_manager->fetch_texture((const char*)vc.value("texture"));
+        //e.texture = engine::texture_manager->fetch_texture((const char*)vc.value("texture"));
 		
 		e.num_affectors = 0;
 		const VSD_container& affectors_vc = vc.container("affectors");
@@ -293,7 +295,7 @@ namespace vis
 	
 	void Particle_fx_manager::init()
 	{
-		context.init();
+        //context.init();
 		Particle_fx* ps = context.create_pfx("acft_smoke1.pfx", translation(Vector3_f(0, 2.0f, 0)));
 		ps->_rdata.matrix[0] = translation(Vector3_f(0, 2.0f, 0));
 	}
@@ -316,7 +318,6 @@ namespace vis
 	{
 
 	}
-#endif
 	void Particle_fx_manager::update()
 	{
 		//context.update();

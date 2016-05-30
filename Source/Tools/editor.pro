@@ -35,7 +35,10 @@ SOURCES +=  ParticleEditor2D/ColorVarianceEditor.cpp \
     particle_fx_manager.cpp \
     rt_particles.cpp \
     rt_gl.cpp \
-    glwidget.cpp
+    glwidget.cpp \
+    vsd_util.cpp \
+    vsd.cpp \
+    hash.cpp
 
 
 HEADERS += ParticleEditor2D/ColorVarianceEditor.h \
@@ -52,6 +55,7 @@ ParticleEditor2D/Vector2Editor.h \
     particle_fx.h \
     particle_fx_manager.h \
     rt_core.h \
+    vsd.h \
     glwidget.h
 
 

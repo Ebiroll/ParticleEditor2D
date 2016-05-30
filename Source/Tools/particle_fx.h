@@ -14,6 +14,7 @@
 #endif
 
 #include "rt_core.h"
+#include "vsd.h"
 
 #include <memory>
 
@@ -119,9 +120,9 @@ namespace vis
 		Particle_fx_resource();
 		virtual ~Particle_fx_resource() {}
 
-        //void read(const VSD_container&);
-        //void read_emitter(const VSD_container&, Emitter_data&);
-        //void read_affector(const VSD_container&, Particle_affector&);
+        void read(const VSD_container&);
+        void read_emitter(const VSD_container&, Emitter_data&);
+        void read_affector(const VSD_container&, Particle_affector&);
 
 		uint32_t total_particles;
 		std::vector<Emitter_data> emitters;

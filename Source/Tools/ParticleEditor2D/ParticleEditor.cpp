@@ -27,6 +27,9 @@
 #include "MainWindow.h"
 #include <X11/Xlib.h>
 #include <Qt/qx11info_x11.h>
+#include "particle_fx.h"
+#include "particle_fx_manager.h"
+
 
 namespace Urho3D
 {
@@ -66,7 +69,15 @@ void ParticleEditor::New()
 void ParticleEditor::Open(const QString& fileName)
 {
 
-    mainWindow_->UpdateWidget();
+   std::string tmp=fileName.toStdString();
+
+
+   std::shared_ptr<vis::Particle_fx_resource> part;
+   part=vis::load_pfx_resource(tmp.c_str());
+
+   qDebug() << part->total_particles;
+
+   mainWindow_->UpdateWidget();
 }
 
 void ParticleEditor::Save(const QString& fileName)

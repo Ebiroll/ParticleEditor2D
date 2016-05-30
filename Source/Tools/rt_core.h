@@ -83,6 +83,30 @@ struct Memory_stream
 
         }
 
+    inline uint32_t Memory_stream::read(void *buffer, uint32_t size)
+    {
+        if (_offset + size > _size) {
+            size = _size - _offset;
+            //TRACE("WARNING: reading more bytes than available!\n");
+        }
+        memcpy(buffer, _data + _offset, size);
+        _offset += size;
+        return size;
+    }
+
+    inline uint32_t Memory_stream::write(const void *buffer, uint32_t size)
+    {
+        if (_offset + size > _size) {
+            size = _size - _offset;
+            //TRACE("WARNING: writing more bytes than available!\n");
+        }
+        memcpy(_data + _offset, buffer, size);
+        _offset += size;
+        return size;
+    }
+
+
+
         inline uint32_t Memory_stream::size() const
         {
             return _size;
@@ -93,6 +117,11 @@ struct Memory_stream
             return _offset;
         }
 
+
+        inline void *Memory_stream::data()
+        {
+            return _data;
+        }
 
         inline const void *Memory_stream::data() const
         {
@@ -108,6 +137,9 @@ struct Memory_stream
         {
             return _data + _offset;
         }
+
+
+
 
 
 
