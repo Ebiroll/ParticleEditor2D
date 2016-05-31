@@ -1,5 +1,6 @@
 DEFINES += "LINUX"
-DEFINES += "VSG_USE_NATIVE_STL"
+#DEFINES += "VSG_USE_NATIVE_STL"
+#DEFINES += "_FORTIFY_SOURCE"
 OSFLAG=linux
 #CONFIG += release
 CONFIG += debug
@@ -38,7 +39,8 @@ SOURCES +=  ParticleEditor2D/ColorVarianceEditor.cpp \
     glwidget.cpp \
     vsd_util.cpp \
     vsd.cpp \
-    hash.cpp
+    hash.cpp \
+    pfx.cpp
 
 
 HEADERS += ParticleEditor2D/ColorVarianceEditor.h \
@@ -56,7 +58,8 @@ ParticleEditor2D/Vector2Editor.h \
     particle_fx_manager.h \
     rt_core.h \
     vsd.h \
-    glwidget.h
+    glwidget.h \
+    pfx.h
 
 
 RESOURCES     = ParticleEditor2D/Resources.qrc
@@ -107,7 +110,7 @@ LIBS += -L/usr/lib64 -lGL
 LIBS += -L/usr/lib64 -lGLU -lX11 -lm -lpthread
 LIBS += -L/usr/lib64 -lXmu
 LIBS += -lX11
-#LIBS += -static-libstdc++
+LIBS += -static-libstdc++
 }
 
 TARGET = si_editor
@@ -116,8 +119,8 @@ QT += network
 QT += opengl
 
 #QMAKE_CXXFLAGS += -fpermissive -std=c++0x
-QMAKE_CXXFLAGS += -std=c++11
-#QMAKE_CXXFLAGS += -Wall
+QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_CXXFLAGS += -Wall
 #QMAKE_CXXFLAGS += -Wno-long-long
 
 #DESTDIR = ./release

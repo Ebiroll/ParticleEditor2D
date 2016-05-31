@@ -5,9 +5,12 @@
 #include <QGLFunctions>
 #include "rt_vector.h"
 #include "rt_matrix.h"
+#include "rt_random.h"
+
 
 namespace vis
 {
+#if 0
 extern uint32_t s_random_seed;
 
 inline int32_t rand_i(uint32_t& seed)
@@ -25,6 +28,7 @@ inline float rand_f()
 {
     return rand_f(s_random_seed);
 }
+#endif
 
 struct Memory_stream
 {

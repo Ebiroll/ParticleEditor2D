@@ -61,6 +61,8 @@ public:
 
     void setClearColor(const QColor &color);
 
+    float zoomFactor;
+
 signals:
     void clicked();
 
@@ -71,6 +73,7 @@ protected:
     void mousePressEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+    void wheelEvent(QWheelEvent *event);
 
 private:
     void makeObject();
@@ -85,6 +88,9 @@ private:
     QVector<QVector2D> texCoords;
     QVector<QVector2D> animParams;
     GLuint _sb;
+
+    float deltaX;
+    float deltaY;
 
     QGLShaderProgram *program;
 };

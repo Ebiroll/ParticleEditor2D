@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>dds/explosion.png</file>
+        <file>dds/fire.png</file>
     </qresource>
 </RCC>

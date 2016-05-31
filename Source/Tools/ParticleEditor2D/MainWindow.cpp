@@ -100,6 +100,11 @@ void MainWindow::CreateActions()
     exitAction_->setShortcut(QKeySequence::fromString("Alt+F4"));
     connect(exitAction_, SIGNAL(triggered(bool)), this, SLOT(close()));
 
+    restartAction_ = new QAction(tr("Restart emitter"), this);
+    restartAction_->setShortcut(QKeySequence::fromString("Ctrl+R"));
+    connect(restartAction_, SIGNAL(triggered(bool)), this, SLOT(HandleRestartAction()));
+
+
     zoomInAction_ = new QAction(QIcon(":/Images/ZoomIn.png"), tr("Zoom In"), this);
     zoomInAction_->setShortcut(QKeySequence::fromString("Ctrl++"));
     connect(zoomInAction_, SIGNAL(triggered(bool)), this, SLOT(HandleZoomAction()));
@@ -135,6 +140,9 @@ void MainWindow::CreateMenuBar()
     fileMenu_->addAction(openAction_);
     fileMenu_->addAction(saveAction_);
     fileMenu_->addAction(saveAsAction_);
+
+    fileMenu_->addSeparator();
+    fileMenu_->addAction(restartAction_);
 
     fileMenu_->addSeparator();
 
@@ -226,6 +234,12 @@ void MainWindow::HandleSaveAsAction()
 
     ParticleEditor::Get()->Save(fileName.toLatin1().data());
 }
+
+/// Handle restart action.
+void MainWindow::HandleRestartAction() {
+
+}
+
 
 void MainWindow::HandleZoomAction()
 {

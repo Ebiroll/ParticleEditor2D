@@ -38,6 +38,7 @@ ParticleEditor::ParticleEditor(int argc, char* argv[]) :
     QApplication(argc, argv),
     mainWindow_(new MainWindow(this))
 {
+    particle_manager_.init();
 }
 
 ParticleEditor::~ParticleEditor()
@@ -68,14 +69,6 @@ void ParticleEditor::New()
 
 void ParticleEditor::Open(const QString& fileName)
 {
-
-   std::string tmp=fileName.toStdString();
-
-
-   std::shared_ptr<vis::Particle_fx_resource> part;
-   part=vis::load_pfx_resource(tmp.c_str());
-
-   qDebug() << part->total_particles;
 
    mainWindow_->UpdateWidget();
 }

@@ -25,6 +25,8 @@
 //#include "Ptr.h"
 #include <QApplication>
 #include "glwidget.h"
+#include "particle_fx_manager.h"
+
 namespace Urho3D
 {
 
@@ -70,6 +72,9 @@ private slots:
     void OnTimeout();
 
 private:
+    /// Particle manager
+    vis::Particle_fx_manager particle_manager_;
+
     /// Create scene.
 
     /// Editor main window.

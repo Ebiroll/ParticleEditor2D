@@ -78,8 +78,12 @@ private slots:
     void HandleZoomAction();
     /// Handle background action.
     void HandleBackgroundAction();
+    /// Handle restart action.
+    void HandleRestartAction();
 
 private:
+    /// Restart action.
+    QAction* restartAction_;
     /// New action.
     QAction* newAction_;
     /// Open action.

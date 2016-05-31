@@ -47,8 +47,29 @@ namespace Urho3D
 {
 EmitterAttributeEditor::EmitterAttributeEditor() :
     //ParticleEffectEditor(context),
+    emitterIndex_(0),
     maxParticlesChanged_(false)
 {
+    pfx=PFX::instance();
+
+
+
+    const char* emitterIndexNames[] =
+    {
+        "0",
+        "1",
+        0
+    };
+
+
+    emitterIndexEditor_ = new QComboBox();
+    vBoxLayout_->addWidget(emitterIndexEditor_, 1);
+
+    for (unsigned i = 0; i < 2; ++i)
+        emitterIndexEditor_->addItem(emitterIndexNames[i], i);
+
+    connect(emitterIndexEditor_,SIGNAL(currentIndexChanged(int)),this,SLOT(HandleBlendModeEditorChanged(int)));
+
     CreateMaxParticlesEditor();
     Createx_angleVarianceEditor();
     Createy_angleVarianceEditor();
@@ -85,6 +106,13 @@ void EmitterAttributeEditor::HandleMaxParticlesEditorValueChanged(int value)
         return;
 
     maxParticlesChanged_ = true;
+
+    // Set resource value
+    pfx->resource()->emitters[emitterIndex_].max_particles=value;
+
+    // Set live emitter value
+    pfx->getLoadedEmitter(emitterIndex_)->max_particles=value;
+
 }
 
 void EmitterAttributeEditor::HandleXAngleValueChanged(float value,float spread)
@@ -114,11 +142,11 @@ void EmitterAttributeEditor::HandleSpeedValueChanged(float value,float spread)
 
 void EmitterAttributeEditor::HandleTexturePushButtonClicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(0, tr("Texture"), "./Data/Urho2D/", "*.dds;*.png;*.jpg;*.bmp;*.tga;*.ktx;*.pvr");
+    QString fileName = QFileDialog::getOpenFileName(0, tr("Texture"), "./dds/", "*.dds;*.png;*.jpg;*.bmp;*.tga;*.ktx;*.pvr");
     if (fileName.isEmpty())
         return;
 
-    static QString dataPath = qApp->applicationDirPath() + "/Data/";
+    static QString dataPath = qApp->applicationDirPath() + "/dds/";
     if (fileName.left(dataPath.length()) != dataPath)
         return;
 
@@ -133,6 +161,14 @@ void EmitterAttributeEditor::HandleTexturePushButtonClicked()
 
     //GetEffect()->SetSprite(sprite);
     //GetEmitter()->SetSprite(sprite);
+}
+
+void EmitterAttributeEditor::HandleEmitterIndexChanged(int index)
+{
+    if (updatingWidget_)
+        return;
+
+    emitterIndex_=index;
 }
 
 void EmitterAttributeEditor::HandleBlendModeEditorChanged(int index)

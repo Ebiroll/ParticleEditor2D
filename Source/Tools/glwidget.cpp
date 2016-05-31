@@ -51,6 +51,8 @@
 #include "glwidget.h"
 #include "rt_particles.h"
 #include <iostream>
+#include "pfx.h"
+
 
 uint32_t vis::s_random_seed = 4711;
 
@@ -66,6 +68,11 @@ uint32_t vis::s_random_seed = 4711;
 GLWidget::GLWidget(QWidget *parent, QGLWidget *shareWidget)
     : QGLWidget(parent, shareWidget)
 {
+    zoomFactor=0.5;
+    deltaX=0.0;
+    deltaY=0.5;
+
+
     clearColor = Qt::black;
     xRot = 0;
     yRot = 0;
@@ -135,7 +142,7 @@ void GLWidget::initializeGL()
 
     QGLShader *vshader = new QGLShader(QGLShader::Vertex, this);
     const char *vsrc =
-        "#version 440\n"
+        "#version 430\n"
         "attribute highp vec4 vertex;\n"
         "attribute mediump vec4 texCoord;\n"
         "attribute mediump vec2 animFraction;\n"
@@ -201,10 +208,7 @@ void GLWidget::initializeGL()
     program->bindAttributeLocation("animFraction", PROGRAM_ANIM_ATTRIBUTE);
 
 
-
-
-
-    std::cerr << "Create streambuffer\n";
+    //std::cerr << "Create streambuffer\n";
 
     glGenBuffers(1, &_sb);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, _sb);
@@ -264,8 +268,12 @@ void GLWidget::paintGL()
 #else
 
     QMatrix4x4 m;
-    m.ortho(-0.5f, +0.5f, +0.5f, -0.5f, 4.0f, 15.0f);
-    m.translate(0.0f, 0.0f, -10.0f);
+
+
+    m.ortho(zoomFactor*-0.5f, zoomFactor*0.5f, zoomFactor*0.5f, zoomFactor*-0.5f, -4.0f, 150.0f);
+    m.translate(deltaX, deltaY, -10.0f);
+
+
     m.rotate(xRot / 16.0f, 1.0f, 0.0f, 0.0f);
     m.rotate(yRot / 16.0f, 0.0f, 1.0f, 0.0f);
     m.rotate(zRot / 16.0f, 0.0f, 0.0f, 1.0f);
@@ -289,10 +297,32 @@ void GLWidget::paintGL()
 
 #endif
 
-    n_particles=n_particles+1;
-    if (n_particles>999) {
-       n_particles=999;
+    vis::Particle_fx* pfx=PFX::instance()->pfx;
+
+    n_particles= PFX::instance()->getLoadedEmitter(1)->max_particles;
+
+    vis::Particle_fx::Emitter* em=PFX::instance()->getLoadedEmitter(1);
+    pfx->update_emitter(*em, 0.01);
+
+    uint32_t n_particles = em->active_particles;
+    const vis::Particle* particles = em->particles;
+
+    assert(n_particles<1000);
+    //VS_particle vs_particles[1000];
+    for (uint32_t i = 0; i < n_particles; ++i) {
+        const vis::Particle& p = particles[i];
+        vis::RT_particles::VS_particle& vp = vs_particles[i];
+        vp.pos[0] = p.position[0];
+        vp.pos[1] = p.position[1];
+        vp.pos[2] = p.position[2];
+        vp.rot = p.rotation;
+        vp.size = p.size;
+        vp.anim = p.animation;
+        vp.color = pack_color(p.color);
     }
+
+
+#if 0
     float c[4]={1.0f,0.0f,0.0f,1.0f};
     for (uint32_t i = 0; i < n_particles; ++i) {
         vis::RT_particles::VS_particle& vp = vs_particles[i];
@@ -307,6 +337,8 @@ void GLWidget::paintGL()
         }
         vp.color = pack_color(c);
     }
+#endif
+
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, _sb);
     glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, sizeof(vis::RT_particles::VS_particle)* n_particles, &vs_particles[0]);
@@ -333,9 +365,18 @@ void GLWidget::resizeGL(int width, int height)
     int side = qMin(width, height);
     glViewport((width - side) / 2, (height - side) / 2, side, side);
 
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+    glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0);
+
+    glMatrixMode(GL_MODELVIEW);
+#if 0
 #if !defined(QT_OPENGL_ES_2)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
+
+
 #ifndef QT_OPENGL_ES
     glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0);
 #else
@@ -343,7 +384,21 @@ void GLWidget::resizeGL(int width, int height)
 #endif
     glMatrixMode(GL_MODELVIEW);
 #endif
+#endif
 }
+
+void GLWidget::wheelEvent(QWheelEvent *event)
+{
+    //qDebug() << "Wheel" << event;
+    if (event->delta()>0) {
+      zoomFactor=zoomFactor*2;
+    }
+    else
+    {
+        zoomFactor=zoomFactor/2;
+    }
+}
+
 
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
@@ -356,9 +411,15 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     int dy = event->y() - lastPos.y();
 
     if (event->buttons() & Qt::LeftButton) {
-        rotateBy(8 * dy, 8 * dx, 0);
+        //rotateBy(8 * dy, 8 * dx, 0);
+        deltaX+=dx/100.0f;
+        deltaY+=dy/100.0f;
+
     } else if (event->buttons() & Qt::RightButton) {
-        rotateBy(8 * dy, 0, 8 * dx);
+        //rotateBy(8 * dy, 0, 8 * dx);
+        deltaX=0.0f;
+        deltaY=0.0f;
+
     }
     lastPos = event->pos();
 }

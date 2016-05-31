@@ -24,6 +24,7 @@
 
 #include "ParticleEffectEditor.h"
 #include "ScrollAreaWidget.h"
+#include "pfx.h"
 
 class QComboBox;
 class QLineEdit;
@@ -57,6 +58,7 @@ private slots:
 
     void HandleTexturePushButtonClicked();
     void HandleBlendModeEditorChanged(int index);
+    void HandleEmitterIndexChanged(int index);
 
     void HandleEmitterTypeEditorChanged(int index);
     //void HandleSourcePositionVarianceEditorValueChanged(const Vector2& value);
@@ -84,10 +86,14 @@ private:
 
     //void HandlePostUpdate(StringHash eventType, VariantMap& eventData);
 
+    QComboBox* emitterIndexEditor_;
+
     /// Max particle editor.
     IntEditor* maxParticlesEditor_;
     /// Is max particles changed.
     bool maxParticlesChanged_;
+
+    int emitterIndex_;
 
    ValueVarianceEditor* x_angleVarianceEditor_;
 
@@ -148,6 +154,9 @@ private:
     ValueVarianceEditor* minRadiusEditor_;
     /// Rotate per second editor.
     ValueVarianceEditor* rotatePerSecondEditor_;
+
+    PFX* pfx;
+
 };
 
 }
