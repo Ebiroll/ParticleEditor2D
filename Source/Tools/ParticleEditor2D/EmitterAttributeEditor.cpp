@@ -42,6 +42,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
+#include <qdebug.h>
 
 namespace Urho3D
 {
@@ -74,6 +75,7 @@ EmitterAttributeEditor::EmitterAttributeEditor() :
     Createx_angleVarianceEditor();
     Createy_angleVarianceEditor();
     Create_Speed_VarianceEditor();
+    Create_rotationSpeed_VarianceEditor();
 
     vBoxLayout_->addSpacing(8);
 
@@ -120,8 +122,41 @@ void EmitterAttributeEditor::HandleXAngleValueChanged(float value,float spread)
     if (updatingWidget_)
         return;
 
-    //GetEffect()->SetDuration(value);
+    // Set resource value
+    pfx->resource()->emitters[emitterIndex_].x_angle=value;
+
+    // Set live emitter value
+    pfx->getLoadedEmitter(emitterIndex_)->x_angle=value;
+
+
+    // Set resource value
+    pfx->resource()->emitters[emitterIndex_].x_angle_spread=spread;
+
+    // Set live emitter value
+    pfx->getLoadedEmitter(emitterIndex_)->x_angle_spread=spread;
+
 }
+
+void EmitterAttributeEditor::HandlerotationSpeedChanged(float value,float spread)
+{
+    if (updatingWidget_)
+        return;
+    // Set resource value
+    pfx->resource()->emitters[emitterIndex_].rotation_speed=value;
+
+    // Set live emitter value
+    pfx->getLoadedEmitter(emitterIndex_)->rotation_speed=value;
+
+
+    // Set resource value
+    pfx->resource()->emitters[emitterIndex_].rotation_speed_spread=spread;
+
+    // Set live emitter value
+    pfx->getLoadedEmitter(emitterIndex_)->rotation_speed_spread=spread;
+
+
+}
+
 
 void EmitterAttributeEditor::HandleYAngleValueChanged(float value,float spread)
 {
@@ -167,6 +202,9 @@ void EmitterAttributeEditor::HandleEmitterIndexChanged(int index)
 {
     if (updatingWidget_)
         return;
+
+    qDebug() << "Index selected" << index;
+    PFX::instance()->emitter_index_selected=index;
 
     emitterIndex_=index;
 }
@@ -318,6 +356,21 @@ void EmitterAttributeEditor::Createy_angleVarianceEditor()
     //durationEditor_->setRange(-1.0f, 100.0f);
     connect(y_angleVarianceEditor_, SIGNAL(valueChanged(float,float)), this, SLOT(HandleYAngleValueChanged(float,float)));
 }
+
+
+void EmitterAttributeEditor::Create_rotationSpeed_VarianceEditor() {
+    rotationSpeed_VarianceEditor_=new ValueVarianceEditor(tr("rotation_speed"));
+    rotationSpeed_VarianceEditor_->setValue(0.0f,3.14f);
+    rotationSpeed_VarianceEditor_->setRange(-3.14f,3.14f);
+
+    vBoxLayout_->addWidget(rotationSpeed_VarianceEditor_);
+
+    //durationEditor_->setRange(-1.0f, 100.0f);
+    connect(rotationSpeed_VarianceEditor_, SIGNAL(valueChanged(float,float)), this, SLOT(HandlerotationSpeedChanged(float,float)));
+
+}
+
+
 
 void EmitterAttributeEditor::Create_Speed_VarianceEditor()
 {

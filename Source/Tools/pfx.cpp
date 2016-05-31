@@ -9,13 +9,18 @@ PFX* PFX::inst=NULL;
 PFX::PFX()
 {
     // Initial data for hmi
+    pfx=NULL;
+    emitter_index_selected=1;
     loadParticleEffect("acft_smoke1.pfx");
 }
 
 
 void PFX::loadParticleEffect(std::string filename)
 {
-    delete pfx;
+    if (pfx!=NULL)
+    {
+      delete pfx;
+    }
 
     partres_=vis::load_pfx_resource(filename.c_str());
 

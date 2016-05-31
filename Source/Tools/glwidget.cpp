@@ -299,9 +299,9 @@ void GLWidget::paintGL()
 
     vis::Particle_fx* pfx=PFX::instance()->pfx;
 
-    n_particles= PFX::instance()->getLoadedEmitter(1)->max_particles;
+    n_particles= PFX::instance()->getLoadedEmitter(PFX::instance()->emitter_index_selected)->max_particles;
 
-    vis::Particle_fx::Emitter* em=PFX::instance()->getLoadedEmitter(1);
+    vis::Particle_fx::Emitter* em=PFX::instance()->getLoadedEmitter(PFX::instance()->emitter_index_selected);
     pfx->update_emitter(*em, 0.01);
 
     uint32_t n_particles = em->active_particles;

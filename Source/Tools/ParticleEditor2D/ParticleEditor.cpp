@@ -81,7 +81,7 @@ void ParticleEditor::Save(const QString& fileName)
 
 void ParticleEditor::setGLWidget(GLWidget* widget)
 {
-  qDebug() << "setGLWidget";
+  //qDebug() << "setGLWidget";
 
   glWidget_=widget;
 }

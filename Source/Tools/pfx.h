@@ -17,6 +17,7 @@ public:
     static PFX* instance();
 
     vis::Particle_fx* pfx;
+    int emitter_index_selected;
 private:
     PFX();
     std::shared_ptr<vis::Particle_fx_resource> partres_;

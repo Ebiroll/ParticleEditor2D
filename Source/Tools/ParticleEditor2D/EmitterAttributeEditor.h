@@ -55,6 +55,7 @@ private slots:
     void HandleXAngleValueChanged(float value,float spread);
     void HandleYAngleValueChanged(float value,float spread);
     void HandleSpeedValueChanged(float value,float spread);
+    void HandlerotationSpeedChanged(float value,float spread);
 
     void HandleTexturePushButtonClicked();
     void HandleBlendModeEditorChanged(int index);
@@ -73,6 +74,7 @@ private:
     void Createx_angleVarianceEditor();
     void Createy_angleVarianceEditor();
     void Create_Speed_VarianceEditor();
+    void Create_rotationSpeed_VarianceEditor();
 
     void CreateTextureEditor();
     void CreateBlendModeEditor();
@@ -100,6 +102,8 @@ private:
    ValueVarianceEditor* y_angleVarianceEditor_;
 
    ValueVarianceEditor* speed_VarianceEditor_;
+
+   ValueVarianceEditor* rotationSpeed_VarianceEditor_;
 
 
 #if 0
