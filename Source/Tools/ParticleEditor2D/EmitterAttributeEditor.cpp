@@ -47,7 +47,7 @@
 namespace Urho3D
 {
 EmitterAttributeEditor::EmitterAttributeEditor() :
-    //ParticleEffectEditor(context),
+    ParticleEffectEditor(),
     emitterIndex_(0),
     maxParticlesChanged_(false)
 {
@@ -297,6 +297,7 @@ void EmitterAttributeEditor::HandleValueVarianceEditorValueChanged(float average
 
 void EmitterAttributeEditor::HandleUpdateWidget()
 {
+    qDebug() << "EmitterAttributeEditor::HandleUpdateWidget()";
 #if 0
     ParticleEffect2D* effect_ = GetEffect();
 

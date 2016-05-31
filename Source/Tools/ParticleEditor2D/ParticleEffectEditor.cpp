@@ -28,7 +28,6 @@
 namespace Urho3D
 {
 ParticleEffectEditor::ParticleEffectEditor() :
-    //Object(context),
     updatingWidget_(false)
 {
 
