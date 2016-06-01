@@ -174,12 +174,17 @@ void GLWidget::initializeGL()
         "    vca[2] = vec2(1.0, 1.0);\n"
         "    vca[3] = vec2(1.0, 0.0);\n"
         "    vec2 pos = (2.0 * vca[gl_VertexID%4] - 1.0) * p_data[gl_InstanceID].size;"
+        "	 pos = rotate(vec2(pos), p_data[gl_InstanceID].rot);"
+#if 0
+        // To get full size
         "	 pos = rotate(vec2(vertex), p_data[gl_InstanceID].rot);"
-        "	 gl_Position = matrix  * vec4(pos.xy, 0.0, 1.0);"
+#endif
+        "	 gl_Position =  vec4(pos.xy, 0.0, 1.0);"
+        "    gl_Position.xyz -= p_data[gl_InstanceID].pos.xyz;\n"
+        "    gl_Position = matrix * gl_Position;\n"
 #if 0
         "    gl_Position = matrix * vertex;\n"
 #endif
-        "    gl_Position.xyz += p_data[gl_InstanceID].pos.xyz;\n"
         "    float anim = floor(p_data[gl_InstanceID].anim + 0.5) * animFraction.x;\n"
         "    vec2 uv_anim;\n"
         "	 uv_anim.x = fract(anim);\n"
@@ -219,7 +224,6 @@ void GLWidget::initializeGL()
 
     //glCreateBuffers(1, &_sb);
     //glNamedBufferData(_sb, sizeof(VS_particle) * 1000, 0, GL_STREAM_DRAW);
-
 
     program->link();
 
@@ -302,7 +306,7 @@ void GLWidget::paintGL()
     n_particles= PFX::instance()->getLoadedEmitter(PFX::instance()->emitter_index_selected)->max_particles;
 
     vis::Particle_fx::Emitter* em=PFX::instance()->getLoadedEmitter(PFX::instance()->emitter_index_selected);
-    pfx->update_emitter(*em, 0.01);
+    pfx->update_emitter(*em, 0.001);
 
     uint32_t n_particles = em->active_particles;
     const vis::Particle* particles = em->particles;
@@ -316,7 +320,7 @@ void GLWidget::paintGL()
         vp.pos[1] = p.position[1];
         vp.pos[2] = p.position[2];
         vp.rot = p.rotation;
-        vp.size = p.size;
+        vp.size = p.size*i/100;
         vp.anim = p.animation;
         vp.color = pack_color(p.color);
     }
@@ -352,7 +356,8 @@ void GLWidget::paintGL()
     //glDrawArrays(GL_TRIANGLE_FAN, 0 * 4, 4);
 
     // Draw all active particles
-    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, n_particles);
+    glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 8, n_particles);
+
 
     //for (int i = 0; i < 6; ++i) {
     //    glBindTexture(GL_TEXTURE_2D, textures[i]);
@@ -431,13 +436,54 @@ void GLWidget::mouseReleaseEvent(QMouseEvent * /* event */)
 
 void GLWidget::makeObject()
 {
+
+    float verticesData[] = {
+              -1.0f,  1.0f, 0.0f,  // 0, Top Left
+              -1.0f, -1.0f, 0.0f,  // 1, Bottom Left
+               1.0f, -1.0f, 0.0f,  // 2, Bottom Right
+               1.0f,  1.0f, 0.0f,  // 3, Top Right
+        };
+
+    // The order we like to connect them.
+    //private short[] indices = { 0, 1, 2, 0, 2, 3 };
+
+
+    //plot our texture
+      float textCoordsData[]={
+              //Mapping coordinates for the vertices
+              0.0f, 0.0f,
+              0.0f, 1.0f,
+              1.0f, 1.0f,
+              1.0f, 0.0f
+
+    };
+
+    //Better draw as Triangle fan
+      //01
+      //32
+
+      for (int j=0; j < 6; ++j) {
+          textures[j] = bindTexture(QPixmap(QString(":/dds/explosion.png")), GL_TEXTURE_2D);
+      }
+
+      for (int i = 0; i < 4; ++i) {
+          texCoords.append(QVector2D(textCoordsData[i*2],textCoordsData[i*2+1]));
+          vertices.append(QVector3D(verticesData[3*i], verticesData[3*i+1],verticesData[3*i+2]));
+      }
+
+
+
+
+
+#if 0
+
     static const int coords[6][4][3] = {
-        { { +1, -1, -1 }, { -1, -1, -1 }, { -1, +1, -1 }, { +1, +1, -1 } },
-        { { +1, +1, -1 }, { -1, +1, -1 }, { -1, +1, +1 }, { +1, +1, +1 } },
-        { { +1, -1, +1 }, { +1, -1, -1 }, { +1, +1, -1 }, { +1, +1, +1 } },
-        { { -1, -1, -1 }, { -1, -1, +1 }, { -1, +1, +1 }, { -1, +1, -1 } },
-        { { +1, -1, +1 }, { -1, -1, +1 }, { -1, -1, -1 }, { +1, -1, -1 } },
-        { { -1, -1, +1 }, { +1, -1, +1 }, { +1, +1, +1 }, { -1, +1, +1 } }
+        { { +6, -6, -6 }, { -6, -6, -6 }, { -6, +6, -6 }, { +6, +6, -6 } },
+        { { +6, +6, -6 }, { -6, +6, -6 }, { -6, +6, +6 }, { +6, +6, +6 } },
+        { { +6, -6, +6 }, { +6, -6, -6 }, { +6, +6, -6 }, { +6, +6, +6 } },
+        { { -6, -6, -6 }, { -6, -6, +6 }, { -6, +6, +6 }, { -6, +6, -6 } },
+        { { +6, -6, +6 }, { -6, -6, +6 }, { -6, -6, -6 }, { +6, -6, -6 } },
+        { { -6, -6, +6 }, { +6, -6, +6 }, { +6, +6, +6 }, { -6, +6, +6 } }
     };
 
     for (int j=0; j < 6; ++j) {
@@ -453,8 +499,9 @@ void GLWidget::makeObject()
             texCoords.append
                 (QVector2D(j == 0 || j == 3, j == 0 || j == 1));
             vertices.append
-                (QVector3D(0.2 * coords[i][j][0], 0.2 * coords[i][j][1],
-                           0.2 * coords[i][j][2]));
+                (QVector3D(2.0 * coords[i][j][0], 2.0 * coords[i][j][1],
+                           2.0 * coords[i][j][2]));
         }
     }
+#endif
 }

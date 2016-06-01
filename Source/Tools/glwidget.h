@@ -88,6 +88,7 @@ private:
     QVector<QVector2D> texCoords;
     QVector<QVector2D> animParams;
     GLuint _sb;
+    //GLuint _va;
 
     float deltaX;
     float deltaY;
