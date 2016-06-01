@@ -320,7 +320,7 @@ void GLWidget::paintGL()
         vp.pos[1] = p.position[1];
         vp.pos[2] = p.position[2];
         vp.rot = p.rotation;
-        vp.size = p.size*i/100;
+        vp.size = p.size;
         vp.anim = p.animation;
         vp.color = pack_color(p.color);
     }
